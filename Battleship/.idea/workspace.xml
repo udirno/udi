@@ -2,19 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ff8562d2-e112-44c6-83e1-8be82a5e961a" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/board.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/board.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/game.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/game.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/player.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/player.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ship.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/ship.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/configs/1X1board_one_ship_one_life.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/configs/3X4board_one_ship.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/configs/6X5board_5_ships.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/configs/classic_game.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/configs/mini_game.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/configs/minor_game.txt" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -147,7 +136,7 @@
       <option name="presentableId" value="Default" />
       <updated>1579890597845</updated>
       <workItem from="1579890601837" duration="11664000" />
-      <workItem from="1580684303722" duration="6068000" />
+      <workItem from="1580684303722" duration="8501000" />
     </task>
     <servers />
   </component>
