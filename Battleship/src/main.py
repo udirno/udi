@@ -1,3 +1,5 @@
+
+
 def __init__(self):
     # open stop_words.txt for reading
     # create a list attribute
