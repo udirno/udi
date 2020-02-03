@@ -3,6 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="ff8562d2-e112-44c6-83e1-8be82a5e961a" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/board.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/board.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/player.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/player.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -31,6 +32,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$USER_HOME$/Desktop" />
     <property name="settings.editor.selected.configurable" value="preferences.sourceCode" />
   </component>
   <component name="RunManager" selected="Python.board">
@@ -136,7 +138,7 @@
       <option name="presentableId" value="Default" />
       <updated>1579890597845</updated>
       <workItem from="1579890601837" duration="11664000" />
-      <workItem from="1580684303722" duration="8501000" />
+      <workItem from="1580684303722" duration="11670000" />
     </task>
     <servers />
   </component>

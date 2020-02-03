@@ -62,6 +62,34 @@ class Board(object):
         return (0 <= row < self.num_rows and
                 0 <= col < self.num_cols)
 
+    def get_ship_ends(ship: Ship, row: int, col: int, orientation: str) -> Tuple:
+        erow, ecol = row, col
+        if orientation == 'horizontal':
+            ecol = col-ship.size+1
+        elif orientation == 'vertical':
+            erow = row-ship.size+1
+        return (erow, ecol)
+
+    def can_place(self, ship: Ship, row: int, col: int, orientation: str) -> bool:
+        result = self.is_in_bounds(row, col)
+        if result:
+            erow, ecol = self.get_ship_ends(ship, row, col, orientation)
+            result = self.is_in_bounds(erow, ecol)
+        return result
+
+    # Assume a valid placement exists - we will not check but just place
+    def place(self, ship: Ship, row: int, col: int, orientation: str) -> None:
+        if !self.can_place(Ship, row, col, orientation):
+            return
+        erow, ecol = get_ship_ends(ship, row, col, orientation)
+        for r in range(row, erow+1):
+
+        result = is_in_bounds(row, col)
+        if result:
+            erow, ecol = get_ship_ends(ship, row, col, orientation)
+            resutl = is_in_bounds(erow, ecol)
+        return result
+
 '''
 index = 0
 every_other = []
@@ -69,8 +97,6 @@ for elem in iterable:
     if index%2 == 0:
         every_other.append(elem)
     index += 1
-
-
 
 # Alternative 2. Use enumerate and get position information implicitly
 every_other = []
@@ -91,5 +117,3 @@ for row in b:
 for row in board:
     for spot in row:
         do something with spot
-
-
