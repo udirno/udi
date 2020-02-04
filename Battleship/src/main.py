@@ -3,7 +3,7 @@
 def __init__(self):
     # open stop_words.txt for reading
     # create a list attribute
-    infile = open("stop_words.txt")
+    infile = open("config.txt")
     self.stop_words = []
     for word in infile:  # loop through each word in text file
         word = word.strip()

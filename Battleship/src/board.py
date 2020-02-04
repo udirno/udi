@@ -79,7 +79,11 @@ class Board(object):
 
     # Assume a valid placement exists - we will not check but just place
     def place(self, ship: Ship, row: int, col: int, orientation: str) -> None:
-        if !self.can_place(Ship, row, col, orientation):
+        if (self.can_place(ship, row, col, orientation):
+            #if orientation == "horizontal":
+                #srow,scol move right to erow,ecol
+            #elif orientation == "vertical":
+                #srow,scol move down to erow, ecol
             return
         erow, ecol = get_ship_ends(ship, row, col, orientation)
         for r in range(row, erow+1):

@@ -48,29 +48,32 @@ class Player(object):
     '''
     def valid_placement(ship, row, col, orientation, board):
         # TBD
-        retrun
+        return
         True
 
     def get_ship_orientation(ship):
         # TBD: check prefix with if...
-        orientation = input('How would you place ship {ship.name} (horizontal or vertical) ?:')
-        orientation.lower()
-        prefixes_hor = ('h', 'hori', 'horiz', 'horizontal')
-        prefixes_ver = ('v', 'vert', 'verti', 'vertical')
-        if orientation.startswith(prefixes_hor) == True:
-            orientation = 'horizontal'
-            return orientation
-        elif orientation.startswith(prefixes_ver) == True:
-            orientation = 'vertical'
-            return orientation
-        else:
-            print(orientation, ' does not represent an Orientation')
+        while True:
+            orientation = input('How would you place ship {ship.name} (horizontal or vertical) ?:')
+            orientation.lower()
+            prefixes_hor = ('h', 'hori', 'horiz', 'horizontal')
+            prefixes_ver = ('v', 'vert', 'verti', 'vertical')
+            if orientation.startswith(prefixes_hor) == True:
+                orientation = 'horizontal'
+                return orientation
+            elif orientation.startswith(prefixes_ver) == True:
+                orientation = 'vertical'
+                return orientation
+            else:
+                print(orientation, ' does not represent an Orientation')
 
 def get_ship_coordinate(ship):
         # TBD check python formatted input int, int otherwise ask again...
         # row, col = input('Where would you place ship {ship.name}  (row, col) ?')
-        row, col = [int(x) for x in input("Where would you place ship {ship.name} (row, col) ?").split(,)] #store in list?
-        return (row, col)
+        while True:
+            row, col = input("Where would you place ship {ship.name} (row, col) ?").split(, )
+
+            return (row, 1  col)
 
     def __str__(self) -> str:
         return self.name
