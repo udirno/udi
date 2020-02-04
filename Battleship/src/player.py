@@ -1,6 +1,6 @@
-from typing import Iterable
-from .move import Move, MoveError
+from typing import Iterable, Tuple
 from .board import Board
+from .ship import Ship
 '''
 In the Player class we keep information regarding 
 - player's name
@@ -10,37 +10,45 @@ In the Player class we keep information regarding
 '''
 
 class Player(object):
-    def __init__(self, ships: Iterable[Ship], num_rows: int, num_cols: int, blank_char: str) -> None:
+    def __init__(self, num : int, other_players: Iterable["Player"],
+                 ships: Iterable["Ship"], num_rows: int, num_cols: int,
+                 blank_char: str) -> None:
+        self.player_num = num
         self.name = self.get_name_from_player(other_players)
-        self.ship_placement_board = Board(num_rows, num_cols, blank_char)
-        self.target_hit_board = Board(num_rows, num_cols, blank_char)
+        self.ship_board = Board(num_rows, num_cols, blank_char)
+        self.hit_board = Board(num_rows, num_cols, blank_char)
         self.ship_placements = []
         for ship in ships:
-            row, col, orientation = self.get_ship_placement(ship, board)
+            row, col, orientation = self.get_ship_placement(ship,
+                                                            self.ship_board)
             self.ship_placements.append((row, col, orientation))
-            self.ship_placement_board.place(ship, row, col, orientation)
+            self.ship_board.place(ship, row, col, orientation)
 
-    def self.get_name_from_player(other_players: Iterable["Player"]) -> str:
+        print("Ship Placement Board:\n", self.ship_board)
+        print("Hit Board:\n", self.hit_board)
+
+    def get_name_from_player(self, other_players: Iterable["Player"]) -> str:
         already_used_names = set([player.name for player in other_players])
         while True:
-            name = input('Please enter your name: ')
+            name = input(f'Player {self.player_num} please enter your name: ')
             if name not in already_used_names:
                 return name
             else:
                 print(f'{name} has already been used. Pick another name.')
 
-    def self.get_ship_placement(ship : Ship, board : Board) -> Tuple:
+    def get_ship_placement(self, ship : "Ship", board : "Board") -> Tuple[int, int, str]:
         while True:
             # get ship's placement as oriantation and starting co-ordinate
-            orientation = get_ship_orientation(ship)
-            row, col = get_ship_coordinate(ship)
+            orientation = self.get_ship_orientation(ship)
+            row, col = self.get_ship_coordinate(ship, board)
 
             # Check if the ship can be placed on the board with the given
             # placement (row, col, and oriendtation). If it is a valid
             # placement we are ready to proceed, otherwise retry
             if board.can_place(ship, row, col, orientation):            
                 return (row, col, orientation)
-
+            else:
+                print(f'ERROR: {ship.name} overlaps with another ship if placed {orientation}ly at {row}, {col}.')
     '''
     Check if placing ship at row, col with orientation is valid, i.e the ship
     does not stick out of the board, and it does not overlap with any other 
@@ -51,11 +59,11 @@ class Player(object):
         return
         True
 
-    def get_ship_orientation(ship):
+    def get_ship_orientation(self, ship : Ship):
         # TBD: check prefix with if...
         while True:
-            orientation = input('How would you place ship {ship.name} (horizontal or vertical) ?:')
-            orientation.lower()
+            orientation = input(f'{self.name} enter horizontal or vertical for the orientation of {ship.name}: ')
+            orientation = orientation.lower()
             prefixes_hor = ('h', 'hori', 'horiz', 'horizontal')
             prefixes_ver = ('v', 'vert', 'verti', 'vertical')
             if orientation.startswith(prefixes_hor) == True:
@@ -65,15 +73,22 @@ class Player(object):
                 orientation = 'vertical'
                 return orientation
             else:
-                print(orientation, ' does not represent an Orientation')
+                print('ERROR: you must enter either "horizontal" or "vertical".')
+    
 
-def get_ship_coordinate(ship):
+    def get_ship_coordinate(self, ship : Ship, board : Board):
         # TBD check python formatted input int, int otherwise ask again...
         # row, col = input('Where would you place ship {ship.name}  (row, col) ?')
         while True:
-            row, col = input("Where would you place ship {ship.name} (row, col) ?").split(, )
-
-            return (row, 1  col)
+            inputs = input(f'{self.name} enter co-ordinate of {ship.name} in the form row, column: ').split(',')
+            co_ordinate = [int(x.strip()) for x in inputs]
+            if len(co_ordinate) != 2:
+                print(f'ERROR: you must enter two numbers separated by a comma.')
+            elif not board.is_in_bounds(*co_ordinate):
+                print(f'ERROR: co-ordiante {co_ordinate} falls outside the {board.num_rows}x{board.num_cols} board.')                
+            else:
+                return co_ordinate
+            
 
     def __str__(self) -> str:
         return self.name

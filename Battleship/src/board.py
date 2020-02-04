@@ -1,24 +1,9 @@
-'''
-left diagonal:
-x
- x
-  x
-
-right diagonal:
-  x
- x
-x
-return all_same((self.board[i][i] for i in range (self.board.num_rows))) #this is a generator expression
-'''
-# Two ways of picking up every other element of a list
-# e.g. produce [1, 5, 9] from [1, 3, 5, 7, 9]
-#iterable = [1, 3, 5, 7, 9]
-
-# Alternative 1. Track position with an explicit index counter
-from typing import Iterator, List
+from typing import Iterator, List, Tuple
+from .ship import Ship
 
 class Board(object):
     def __init__(self, num_rows: int, num_cols: int, blank_char: str) -> None:
+        #2d list of list
         self.contents = [[blank_char for col in range(num_cols)] for row in range(num_rows)]
         self.blank_char = blank_char
 
@@ -62,37 +47,44 @@ class Board(object):
         return (0 <= row < self.num_rows and
                 0 <= col < self.num_cols)
 
-    def get_ship_ends(ship: Ship, row: int, col: int, orientation: str) -> Tuple:
+    def get_ship_ends(self, ship: Ship, row: int, col: int, orientation: str) -> Tuple[int, int]:
         erow, ecol = row, col
         if orientation == 'horizontal':
-            ecol = col-ship.size+1
+            ecol = col+ship.size-1
         elif orientation == 'vertical':
-            erow = row-ship.size+1
+            erow = row+ship.size-1
         return (erow, ecol)
 
-    def can_place(self, ship: Ship, row: int, col: int, orientation: str) -> bool:
-        result = self.is_in_bounds(row, col)
-        if result:
-            erow, ecol = self.get_ship_ends(ship, row, col, orientation)
-            result = self.is_in_bounds(erow, ecol)
-        return result
+    def ship_cells(self, ship: Ship, row: int, col: int, orientation: str) :
+        erow, ecol = self.get_ship_ends(ship, row, col, orientation)
+        gen_exp = (((r, c) for c in range(col, ecols+1)) for r in range(row, erows+1))
+        return gen_exp
 
-    # Assume a valid placement exists - we will not check but just place
-    def place(self, ship: Ship, row: int, col: int, orientation: str) -> None:
-        if (self.can_place(ship, row, col, orientation):
-            #if orientation == "horizontal":
-                #srow,scol move right to erow,ecol
-            #elif orientation == "vertical":
-                #srow,scol move down to erow, ecol
-            return
-        erow, ecol = get_ship_ends(ship, row, col, orientation)
+    def can_place(self, ship: "Ship", row: int, col: int, orientation: str) -> bool:
+        #go through each cell the ship is on, check if it is on the board and if it is a blank character
+        result = True
+        erow, ecol = self.get_ship_ends(ship, row, col, orientation)
         for r in range(row, erow+1):
-
-        result = is_in_bounds(row, col)
-        if result:
-            erow, ecol = get_ship_ends(ship, row, col, orientation)
-            resutl = is_in_bounds(erow, ecol)
+            for c in range(col, ecol+1):
+                if not self.is_in_bounds(r, c):
+                    result = False
+                    break
+                elif self.contents[r][c] != self.blank_char:
+                    result = False
+                    break
+            if not result:
+                break
         return result
+
+    # very similar to can_place - loop over all cell and mark them
+    def place(self, ship: "Ship", row: int, col: int, orientation: str) -> None:
+        if not self.can_place(ship, row, col, orientation):
+            return
+        erow, ecol = self.get_ship_ends(ship, row, col, orientation)
+        ship_letter = ship.name[0]
+        for r in range(row, erow+1):
+            for c in range(col, ecol+1):
+                self.contents[r][c] = ship_letter
 
 '''
 index = 0
@@ -102,6 +94,8 @@ for elem in iterable:
         every_other.append(elem)
     index += 1
 
+
+
 # Alternative 2. Use enumerate and get position information implicitly
 every_other = []
 for tuple in enumerate(iterable):
@@ -109,7 +103,7 @@ for tuple in enumerate(iterable):
     if position%2 == 0:
         every_other.append(elem)
 print(every_other)
-'''
+
 
 b = Board(args to make a board)
 for row in b:
@@ -121,3 +115,5 @@ for row in b:
 for row in board:
     for spot in row:
         do something with spot
+
+'''

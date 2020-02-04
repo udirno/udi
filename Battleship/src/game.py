@@ -1,4 +1,5 @@
 from typing import Iterable, TypeVar
+from .ship import Ship
 from .board import Board
 from .player import Player
 
@@ -6,17 +7,15 @@ T = TypeVar('T')
 
 
 class Game(object):
-    def __init__(self, ship_args : {str, int}, num_rows: int, num_cols: int) -> None:
-        self.board = Board(num_rows, num_cols)
+    def __init__(self, ship_args : {str, int}, num_rows: int, num_cols: int, blank_char: str = '*') -> None:
         self.ships = []
         for ship_name, ship_size in ship_args.items():
             self.ships.append(Ship(ship_name,ship_size))
 
-
-#DO THE SAME FOR PLAYERS AS FOR SHIPS
         self.players = []
         for player_num in range(2):
-            self.players.append(Player(self.players))
+            self.players.append(Player(player_num, self.players, self.ships,
+                                       num_rows, num_cols, blank_char))
         self._cur_player_turn = 0
 '''
     def __init__(self, dimensions: int, blank_char: str = '*') -> None:
