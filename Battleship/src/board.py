@@ -1,9 +1,11 @@
+import copy
 from typing import Iterator, List, Tuple
 from .ship import Ship
+from .cell import Cell, CellError
 
 class Board(object):
     def __init__(self, num_rows: int, num_cols: int, blank_char: str) -> None:
-        #2d list of list
+        #2d list of lists
         self.contents = [[blank_char for col in range(num_cols)] for row in range(num_rows)]
         self.blank_char = blank_char
 
@@ -39,52 +41,68 @@ class Board(object):
         return all(
             (space != self.blank_char for row in self for space in row)
         )
-        # for row in self:
-        #     for space in row:
-        #         space != self.blank_char
+    def is_in_bounds(self, cell: "Cell") -> bool:
+        return (0 <= cell.row < self.num_rows and
+                0 <= cell.col < self.num_cols)
 
-    def is_in_bounds(self, row: int, col: int) -> bool:
-        return (0 <= row < self.num_rows and
-                0 <= col < self.num_cols)
+    def available(self, cell: "Cell") -> bool:
+        return self.is_in_bounds(cell) and \
+            self.contents[cell.row][cell.col] == self.blank_char
 
-    def get_ship_ends(self, ship: Ship, row: int, col: int, orientation: str) -> Tuple[int, int]:
-        erow, ecol = row, col
+    '''
+    Place a piece in the cell if it is not occupied or out of bounds; otherwise raise CellError.
+    '''
+    def occupy(self, cell: "Cell", piece: str):
+        if not self.is_in_bounds(cell):
+            raise CellError(f'{cell.row}, {cell.col} is not in bounds')
+        elif self.contents[cell.row][cell.col] != self.blank_char:
+            raise CellError(f"location {cell.row}, {cell.col} is already occupied")
+        else:
+            self.contents[cell.row][cell.col] = piece
+
+    def get_ship_end(self, ship: "Ship", scell: "Cell", orientation: str) -> "Cell":
+        ecell = copy.copy(scell)
         if orientation == 'horizontal':
-            ecol = col+ship.size-1
+            ecell.col = scell.col+ship.size-1
         elif orientation == 'vertical':
-            erow = row+ship.size-1
-        return (erow, ecol)
+            ecell.row = scell.row+ship.size-1
+        return ecell
 
-    def ship_cells(self, ship: Ship, row: int, col: int, orientation: str) :
-        erow, ecol = self.get_ship_ends(ship, row, col, orientation)
-        gen_exp = (((r, c) for c in range(col, ecols+1)) for r in range(row, erows+1))
+    def cells(self, ship: "Ship", scell: "Cell", orientation: str) :
+        gen_exp = (Cell(r, c) for c in range(len(self.contents)) for r in range(self.contents[0]))
         return gen_exp
 
-    def can_place(self, ship: "Ship", row: int, col: int, orientation: str) -> bool:
-        #go through each cell the ship is on, check if it is on the board and if it is a blank character
+    def ship_cells(self, ship: "Ship", scell: "Cell", orientation: str) :
+        ecell = self.get_ship_end(ship, scell, orientation)
+        gen_exp = ((Cell(r, c) for c in range(scell.col, ecell.col+1)) for r in range(scell.ros, ecell.row+1))
+        return gen_exp
+
+    ''' Check if placing ship at row, col with orientation is valid, i.e each cell
+        the ship is on, the board and the cell is empty, i.e. contains a blank
+        character '''
+    def ship_fits(self, ship: "Ship", scell: "Cell", orientation: str) -> bool:
         result = True
-        erow, ecol = self.get_ship_ends(ship, row, col, orientation)
-        for r in range(row, erow+1):
-            for c in range(col, ecol+1):
-                if not self.is_in_bounds(r, c):
-                    result = False
-                    break
-                elif self.contents[r][c] != self.blank_char:
+        ecell = self.get_ship_end(ship, scell, orientation)
+        for r in range(scell.row, ecell.row+1):
+            for c in range(scell.col, ecell.col+1):
+                if not self.available(Cell(r, c)):
                     result = False
                     break
             if not result:
                 break
         return result
 
-    # very similar to can_place - loop over all cell and mark them
-    def place(self, ship: "Ship", row: int, col: int, orientation: str) -> None:
-        if not self.can_place(ship, row, col, orientation):
-            return
-        erow, ecol = self.get_ship_ends(ship, row, col, orientation)
+    '''
+    Loop over all cells covered by the ship and mark them with the first letter of the ship
+    name. Raise CellError if any of those cells are out of bounds or already occupied.
+    '''
+    def place_ship(self, ship: "Ship", scell: "Cell", orientation: str) -> None:
         ship_letter = ship.name[0]
-        for r in range(row, erow+1):
-            for c in range(col, ecol+1):
-                self.contents[r][c] = ship_letter
+        ecell = self.get_ship_end(ship, scell, orientation)
+        print(f'placing {ship.name} from {scell.row}, {scell.col} to {ecell.row}, {ecell.col}')
+        for r in range(scell.row, ecell.row+1):
+            for c in range(scell.col, ecell.col+1):
+                self.occupy(Cell(r, c), ship_letter)
 
 '''
 index = 0

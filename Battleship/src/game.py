@@ -7,44 +7,59 @@ T = TypeVar('T')
 
 
 class Game(object):
-    def __init__(self, ship_args : {str, int}, num_rows: int, num_cols: int, blank_char: str = '*') -> None:
+    def __init__(self, ship_args: {str, int}, num_rows: int, num_cols: int, blank_char: str = '*') -> None:
         self.ships = []
         for ship_name, ship_size in ship_args.items():
-            self.ships.append(Ship(ship_name,ship_size))
+            self.ships.append(Ship(ship_name, ship_size))
 
         self.players = []
         for player_num in range(2):
             self.players.append(Player(player_num, self.players, self.ships,
                                        num_rows, num_cols, blank_char))
         self._cur_player_turn = 0
-'''
-    def __init__(self, dimensions: int, blank_char: str = '*') -> None:
-        self.blank_char = blank_char
-        self.board = Board(dimensions, dimensions, blank_char)
-        self.players = []
-        for player_num in range(2):
-            self.players.append(Player(self.players, blank_char))
-        self._cur_player_turn = 0
 
     def play(self) -> None:
         while not self.is_game_over():
             self.display_game_state()
-            self.cur_player.take_turn(self.board)
+            self.cur_player.take_turn(self.other_player(), self.other_player().ship_board)
             self.change_turn()
 
         # because we always change turns after a player wins
         # it will actually be the losing player's "turn"
         # and so we have to change turns one more time
-        #so the correct player is declared the winner
+        # so the correct player is declared the winner
         self.change_turn()
         self.display_game_state()
         self.display_the_winner()
 
     def display_game_state(self) -> None:
-        print(self.board)
+        print('{self.cur_player.name}\'s Board\n {self.cur_player.ship_board}')
+        print('{self.cur_player.name}\'s Scanning Board\n {self.cur_player.hit_board}')
+
+    def change_turn(self) -> None:
+        self._cur_player_turn = (self._cur_player_turn + 1) % 2
+
+    @property
+    def cur_player(self) -> "Player":
+        return self.players[self._cur_player_turn]
+
+    def other_player(self) -> "Player":
+        other_player_turn = (self._cur_player_turn + 1) % 2
+        return self.players[other_player_turn]
 
     def is_game_over(self):
         return self.someone_won() or self.tie_game()
+
+    def someone_won(self) -> bool:
+        # TODO
+        return False
+
+    def tie_game(self) -> bool:
+        # TODO
+        return False
+
+
+'''
 
     def someone_won(self) -> bool:
         """
@@ -126,17 +141,6 @@ class Game(object):
         :return:
         """
         return self.board.is_full()
-
-    def change_turn(self) -> None:
-        self._cur_player_turn = (self._cur_player_turn + 1) % 2
-        # if self._cur_player_turn == 0:
-        #     self._cur_player_turn = 1
-        # else:
-        #     self._cur_player_turn = 0
-
-    @property
-    def cur_player(self) -> "Player":
-        return self.players[self._cur_player_turn]
 
     def display_the_winner(self):
         if self.someone_won():

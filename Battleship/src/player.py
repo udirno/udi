@@ -1,6 +1,8 @@
 from typing import Iterable, Tuple
-from .board import Board
 from .ship import Ship
+from .cell import Cell, CellError
+from .board import Board
+
 '''
 In the Player class we keep information regarding 
 - player's name
@@ -9,8 +11,9 @@ In the Player class we keep information regarding
 - ship placements (orientation, co-ordinates etc.)
 '''
 
+
 class Player(object):
-    def __init__(self, num : int, other_players: Iterable["Player"],
+    def __init__(self, num: int, other_players: Iterable["Player"],
                  ships: Iterable["Ship"], num_rows: int, num_cols: int,
                  blank_char: str) -> None:
         self.player_num = num
@@ -19,51 +22,40 @@ class Player(object):
         self.name = self.get_name_from_player(other_players)
         self.ship_placements = []
         for ship in ships:
-            row, col, orientation = self.get_ship_placement(ship,
-                                                            self.ship_board)
-            self.ship_placements.append((row, col, orientation))
-            self.ship_board.place(ship, row, col, orientation)
-            print("Ship Placement Board:\n", self.ship_board)
-
-        print("Hit Board:\n", self.hit_board)
+            cell, orientation = self.get_ship_placement(ship, self.ship_board)
+            self.ship_placements.append((cell, orientation))
+            self.ship_board.place_ship(ship, cell, orientation)
+            print(f'{self.name}\'s Placement Board\n {self.ship_board}')
 
     def get_name_from_player(self, other_players: Iterable["Player"]) -> str:
         already_used_names = set([player.name for player in other_players])
         while True:
             name = input(f'Player {self.player_num} please enter your name: ')
-            print("Ship Placement Board:\n", self.ship_board)
+            print('{self.name}\'s Placement Board\n {self.ship_board}')
             if name not in already_used_names:
                 return name
             else:
                 print(f'{name} has already been used. Pick another name.')
 
-    def get_ship_placement(self, ship : "Ship", board : "Board") -> Tuple[int, int, str]:
+    def get_ship_placement(self, ship: "Ship", board: "Board") -> Tuple["Cell", str]:
         while True:
             # get ship's placement as oriantation and starting co-ordinate
             orientation = self.get_ship_orientation(ship)
-            row, col = self.get_ship_coordinate(ship, board)
+            cell = self.get_ship_start(ship, board)
 
             # Check if the ship can be placed on the board with the given
             # placement (row, col, and oriendtation). If it is a valid
             # placement we are ready to proceed, otherwise retry
-            if board.can_place(ship, row, col, orientation):            
-                return (row, col, orientation)
+            if board.ship_fits(ship, cell, orientation):
+                return (cell, orientation)
             else:
-                print(f'ERROR: {ship.name} overlaps with another ship if placed {orientation}ly at {row}, {col}.')
-    '''
-    Check if placing ship at row, col with orientation is valid, i.e the ship
-    does not stick out of the board, and it does not overlap with any other 
-    ships that are already on the board
-    '''
-    def valid_placement(ship, row, col, orientation, board):
-        # TBD
-        return
-        True
+                print(
+                    f'ERROR: {ship.name} overlaps with another ship if placed {orientation}ly at {cell.row}, {cell.col}.')
 
-    def get_ship_orientation(self, ship : Ship):
-        # TBD: check prefix with if...
+    def get_ship_orientation(self, ship: Ship) -> str:
         while True:
-            orientation = input(f'{self.name} enter horizontal or vertical for the orientation of {ship.name} , which is {ship.size} long:')
+            orientation = input(
+                f'{self.name} enter horizontal or vertical for the orientation of {ship.name} , which is {ship.size} long:')
             orientation = orientation.lower()
             prefixes_hor = ('h', 'hori', 'horiz', 'horizontal')
             prefixes_ver = ('v', 'vert', 'verti', 'vertical')
@@ -75,42 +67,45 @@ class Player(object):
                 return orientation
             else:
                 print('ERROR: you must enter either "horizontal" or "vertical".')
-    
 
-    def get_ship_coordinate(self, ship : Ship, board : Board):
+    def get_ship_start(self, ship: "Ship", board: "Board") -> "Cell":
         # TBD check python formatted input int, int otherwise ask again...
         # row, col = input('Where would you place ship {ship.name}  (row, col) ?')
         while True:
-            inputs = input(
-                f'{self.name}, enter the starting position for your {ship.name} ship , which is {ship.size} long, in the form row, column:').split(
-                ',')
+            str_cell = input(
+                f'{self.name}, enter the starting position for your {ship.name} ship , which is {ship.size} long, in the form row, column:')
             try:
-                co_ordinate = [int(x.strip()) for x in inputs]
-            except:
-                (ValueError, TypeError)
-                continue
-            if len(co_ordinate) != 2:
-                print(f'ERROR: you must enter two numbers separated by a comma.')
-            elif not board.is_in_bounds(*co_ordinate):
-                print(f'ERROR: co-ordiante {co_ordinate} falls outside the {board.num_rows}x{board.num_cols} board.')                
-            else:
-                break
-        return co_ordinate
-
-            
+                cell = Cell.from_str(str_cell)
+                print(f'return {cell.row}, {cell.col} from {str_cell}')
+                return cell
+            except CellError:
+                pass
 
     def __str__(self) -> str:
         return self.name
 
-    def take_turn(self, the_board: "Board") -> None:
+    def take_turn(self, opponent: "Player", opponent_board: "Board") -> None:
         while True:
             try:
-                move = self.get_move()
-                move.make(the_board)
+                tcell = self.get_target()
+                tmark = 'O'
+                self.hit_board.occupy(tcell, tmark)
+                tmark_old = opponent_board.contents[tcell.row][tcell.col]
+                if tmark_old in set('O', blank_char):
+                    print('Miss')
+                else:
+                    tmark = 'X'
+                    # opponent_ship = opponent_board.get_ship_at(tcell)
+                    opponent_ship = Ship("fake", 4)
+                    if True:
+                        print(f'You destroyed {opponent.name}\'s {opponent_ship.name}')
+                    else:
+                        print(f'You hit {opponent.name}\'s {opponent_ship.name}')
+                    opponent_board.occupy(tcell, tmark)
                 return
-            except MoveError as error:
+            except CellError as error:
                 print(error)
 
-    def get_move(self) -> "Move":
-        str_move = input(f'{self} enter where you want to play in the form row, col: ')
-        return Move.from_str(self, str_move)
+    def get_target(self) -> "Cell":
+        str_cell = input(f'{self.name} Bob, enter the location you want to fire at in the form row, column: ')
+        return Cell.from_str(str_cell)
