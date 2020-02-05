@@ -14,23 +14,24 @@ class Player(object):
                  ships: Iterable["Ship"], num_rows: int, num_cols: int,
                  blank_char: str) -> None:
         self.player_num = num
-        self.name = self.get_name_from_player(other_players)
         self.ship_board = Board(num_rows, num_cols, blank_char)
         self.hit_board = Board(num_rows, num_cols, blank_char)
+        self.name = self.get_name_from_player(other_players)
         self.ship_placements = []
         for ship in ships:
             row, col, orientation = self.get_ship_placement(ship,
                                                             self.ship_board)
             self.ship_placements.append((row, col, orientation))
             self.ship_board.place(ship, row, col, orientation)
+            print("Ship Placement Board:\n", self.ship_board)
 
-        print("Ship Placement Board:\n", self.ship_board)
         print("Hit Board:\n", self.hit_board)
 
     def get_name_from_player(self, other_players: Iterable["Player"]) -> str:
         already_used_names = set([player.name for player in other_players])
         while True:
             name = input(f'Player {self.player_num} please enter your name: ')
+            print("Ship Placement Board:\n", self.ship_board)
             if name not in already_used_names:
                 return name
             else:
@@ -80,14 +81,22 @@ class Player(object):
         # TBD check python formatted input int, int otherwise ask again...
         # row, col = input('Where would you place ship {ship.name}  (row, col) ?')
         while True:
-            inputs = input(f'{self.name}, enter the starting position for your {ship.name} ship , which is {ship.size} long, in the form row, column:').split(',')
-            co_ordinate = [int(x.strip()) for x in inputs]
+            inputs = input(
+                f'{self.name}, enter the starting position for your {ship.name} ship , which is {ship.size} long, in the form row, column:').split(
+                ',')
+            try:
+                co_ordinate = [int(x.strip()) for x in inputs]
+            except:
+                (ValueError, TypeError)
+                continue
             if len(co_ordinate) != 2:
                 print(f'ERROR: you must enter two numbers separated by a comma.')
             elif not board.is_in_bounds(*co_ordinate):
                 print(f'ERROR: co-ordiante {co_ordinate} falls outside the {board.num_rows}x{board.num_cols} board.')                
             else:
-                return co_ordinate
+                break
+        return co_ordinate
+
             
 
     def __str__(self) -> str:
