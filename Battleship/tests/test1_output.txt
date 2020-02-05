@@ -1,0 +1,52 @@
+Player 1 please enter your name: Bob's Placement Board
+  0 1 2 3
+0 * * * *
+1 * * * *
+2 * * * *
+Bob enter horizontal or vertical for the orientation of Monkey which is 1 long: Bob, enter the starting position for your Monkey ship ,which is 1 long, in the form row, column: Bob's Placement Board
+  0 1 2 3
+0 M * * *
+1 * * * *
+2 * * * *
+Player 2 please enter your name: Sally's Placement Board
+  0 1 2 3
+0 * * * *
+1 * * * *
+2 * * * *
+Sally enter horizontal or vertical for the orientation of Monkey which is 1 long: Sally, enter the starting position for your Monkey ship ,which is 1 long, in the form row, column: Sally's Placement Board
+  0 1 2 3
+0 * * * *
+1 * * M *
+2 * * * *
+Bob's Scanning Board
+  0 1 2 3
+0 * * * *
+1 * * * *
+2 * * * *
+Bob's Board
+  0 1 2 3
+0 M * * *
+1 * * * *
+2 * * * *
+Bob, enter the location you want to fire at in the form row, column: Miss
+Bob's Scanning Board
+  0 1 2 3
+0 * * * *
+1 * * * *
+2 * * * O
+Bob's Board
+  0 1 2 3
+0 M * * *
+1 * * * *
+2 * * * *
+Sally's Scanning Board
+  0 1 2 3
+0 * * * *
+1 * * * *
+2 * * * *
+Sally's Board
+  0 1 2 3
+0 * * * *
+1 * * M *
+2 * * * O
+Sally, enter the location you want to fire at in the form row, column:

@@ -1,0 +1,8 @@
+Player 1 please enter your name: Bob's Placement Board
+  0
+0 *
+Bob enter horizontal or vertical for the orientation of FishingBoat which is 1 long: Bob, enter the starting position for your FishingBoat ship ,which is 1 long, in the form row, column: Cannot pace FishingBoat horizontally at 10, 10 because it would be out of bounds.
+Bob enter horizontal or vertical for the orientation of FishingBoat which is 1 long: sally does not represent an Orientation
+Bob enter horizontal or vertical for the orientation of FishingBoat which is 1 long: Bob, enter the starting position for your FishingBoat ship ,which is 1 long, in the form row, column: Cannot pace FishingBoat vertically at 3, 5 because it would be out of bounds.
+Bob enter horizontal or vertical for the orientation of FishingBoat which is 1 long: 0,2 does not represent an Orientation
+Bob enter horizontal or vertical for the orientation of FishingBoat which is 1 long:
