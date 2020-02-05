@@ -62,7 +62,7 @@ class Player(object):
     def get_ship_orientation(self, ship : Ship):
         # TBD: check prefix with if...
         while True:
-            orientation = input(f'{self.name} enter horizontal or vertical for the orientation of {ship.name}: ')
+            orientation = input(f'{self.name} enter horizontal or vertical for the orientation of {ship.name} , which is {ship.size} long:')
             orientation = orientation.lower()
             prefixes_hor = ('h', 'hori', 'horiz', 'horizontal')
             prefixes_ver = ('v', 'vert', 'verti', 'vertical')
@@ -80,7 +80,7 @@ class Player(object):
         # TBD check python formatted input int, int otherwise ask again...
         # row, col = input('Where would you place ship {ship.name}  (row, col) ?')
         while True:
-            inputs = input(f'{self.name} enter co-ordinate of {ship.name} in the form row, column: ').split(',')
+            inputs = input(f'{self.name}, enter the starting position for your {ship.name} ship , which is {ship.size} long, in the form row, column:').split(',')
             co_ordinate = [int(x.strip()) for x in inputs]
             if len(co_ordinate) != 2:
                 print(f'ERROR: you must enter two numbers separated by a comma.')
