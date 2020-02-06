@@ -21,7 +21,7 @@ class Game(object):
     def play(self) -> None:
         while not self.is_game_over():
             self.display_game_state()
-            self.cur_player.take_turn(self.other_player(), self.other_player().ship_board)
+            self.cur_player.take_turn(self.other_player())
             self.change_turn()
 
         # because we always change turns after a player wins
@@ -33,8 +33,11 @@ class Game(object):
         self.display_the_winner()
 
     def display_game_state(self) -> None:
-        print('{self.cur_player.name}\'s Board\n {self.cur_player.ship_board}')
-        print('{self.cur_player.name}\'s Scanning Board\n {self.cur_player.hit_board}')
+        print(f'{self.cur_player.name}\'s Board\n {self.cur_player.ship_board}')
+        print(f'{self.cur_player.name}\'s Scanning Board\n {self.cur_player.scanning_board}')
+
+    def display_the_winner(self) -> None:
+        print(f'{self.cur_player.name} wins.')
 
     def change_turn(self) -> None:
         self._cur_player_turn = (self._cur_player_turn + 1) % 2
@@ -47,7 +50,18 @@ class Game(object):
         other_player_turn = (self._cur_player_turn + 1) % 2
         return self.players[other_player_turn]
 
-    def is_game_over(self):
+    def is_game_over(self) -> bool:
+        result = True
+        opponent = self.other_player()
+        for ship in self.ships:
+            intact_count = self.cur_player.ship_board.intact_cell_count(ship, opponent.scanning_board)
+            if intact_count != 0:
+                result = False
+                break
+        return result
+
+
+        message = f'You destroyed {opponent.name}\'s {opponent_ship.name}'
         return self.someone_won() or self.tie_game()
 
     def someone_won(self) -> bool:

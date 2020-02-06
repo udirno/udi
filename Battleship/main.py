@@ -11,6 +11,7 @@ if __name__ == '__main__':
                 num_rows, num_cols = (int(x.strip()) for x in split_line)
             else:
                 ship_args[split_line[0]] = int(split_line[1])
-    print(f'num_rows = {num_rows}, num_cols = {num_cols}')
-    print(f'ships = {ship_args}')
+    #print(f'num_rows = {num_rows}, num_cols = {num_cols}')
+    #print(f'ships = {ship_args}')
     game = Game(ship_args, num_rows, num_cols)
+    game.play()

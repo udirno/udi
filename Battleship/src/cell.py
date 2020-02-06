@@ -1,6 +1,5 @@
 class CellError(Exception):
-    def __init__(self, message):
-        print(f'CellError: {message}')
+    pass
 
 class Cell(object):
     def __init__(self, row: int, col: int) -> None:
@@ -25,4 +24,6 @@ class Cell(object):
             col = int(col)
         except ValueError:
             raise CellError(f'col needs to be an integer. {col} is not an integer')
-        return cls(row, col)
+        return cls(row, col) #returns object of class Cell
+
+
