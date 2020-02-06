@@ -27,7 +27,7 @@ class Ship(object):
         # row, col = input('Where would you place ship {ship.name}  (row, col) ?')
         while True:
             str_cell = input(
-                f'{player_name},enter the starting position for your {self.name} ship , which is {self.size} long, in the form row, column:')
+                f'{player_name}, enter the starting position for your {self.name} ship ,which is {self.size} long, in the form row, column:')
             try:
                 cell = Cell.from_str(str_cell)
                 print(f'return {cell.row}, {cell.col} from {str_cell}')

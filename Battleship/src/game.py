@@ -33,8 +33,9 @@ class Game(object):
         self.display_the_winner()
 
     def display_game_state(self) -> None:
-        print(f'{self.cur_player.name}\'s Board\n {self.cur_player.ship_board}')
         print(f'{self.cur_player.name}\'s Scanning Board\n {self.cur_player.scanning_board}')
+        print(f'{self.cur_player.name}\'s Board\n {self.cur_player.ship_board}')
+
 
     def display_the_winner(self) -> None:
         print(f'{self.cur_player.name} wins.')
