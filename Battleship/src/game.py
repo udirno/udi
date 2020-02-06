@@ -8,6 +8,7 @@ T = TypeVar('T')
 
 class Game(object):
     def __init__(self, ship_args: {str, int}, num_rows: int, num_cols: int, blank_char: str = '*') -> None:
+        self.blank_char = blank_char
         self.ships = []
         for ship_name, ship_size in ship_args.items():
             self.ships.append(Ship(ship_name, ship_size))
@@ -33,16 +34,29 @@ class Game(object):
         self.display_game_state()
         self.display_the_winner()
 
-    def display_game_state(self) -> None:
-        print(f'{self.cur_player.name}\'s Scanning Board\n {self.cur_player.scanning_board}' + '\n')
-        print(f'{self.cur_player.name}\'s Board\n {self.cur_player.ship_board}' + '\n')
+    def merge_boards(self, ship_board, scan_board) -> "Board":
+        merged_board = ship_board
+        for r in range(len(merged_board.contents)):
+            for c in range(len(merged_board.contents[0])):
+                scan_char = scan_board[r][c]
+                if scan_char != self.blank_char:
+                    merged_board[r][c] = scan_char
+        return merged_board
+
+    # def display_game_state(self) -> None:
+    #     print(f'{self.cur_player.name}\'s Scanning Board\n {self.cur_player.scanning_board}' + '\n')
+    #     print(f'{self.cur_player.name}\'s Board\n {self.cur_player.ship_board}' + '\n')
 
     #def merge_board(self) -> None:
+    def display_game_state(self) -> None:
+        print(f'{self.cur_player.name}\'s Scanning Board\n {self.cur_player.scanning_board}' + '\n')
+        merged_board = self.merge_boards(self.cur_player.ship_board, self.other_player().scanning_board)
+        print(f'{self.cur_player.name}\'s Board\n {merged_board}' + '\n')
 
 
 
     def display_the_winner(self) -> None:
-        print(f'{self.cur_player.name} wins.')
+        print(f'{self.cur_player.name} won the game!')
 
     def change_turn(self) -> None:
         self._cur_player_turn = (self._cur_player_turn + 1) % 2
