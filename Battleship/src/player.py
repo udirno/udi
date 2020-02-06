@@ -67,7 +67,8 @@ class Player(object):
         if opponent_ship == None:
             message = 'Miss'
         elif opponent.ship_board.intact_cell_count(opponent_ship, self.scanning_board) == 0:
-            message = f'You destroyed {opponent.name}\'s {opponent_ship.name}'
+            print(f'You hit {opponent.name}\'s {opponent_ship.name}' + '!')
+            message = f'You destroyed {opponent.name}\'s {opponent_ship.name}' + '!'
         else:
             message = f'You hit {opponent.name}\'s {opponent_ship.name}' + '!'
         print(message)

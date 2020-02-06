@@ -66,8 +66,8 @@ class Game(object):
         return result
 
 
-        message = f'You destroyed {opponent.name}\'s {opponent_ship.name}'
-        return self.someone_won() or self.tie_game()
+
+        #return self.someone_won() or self.tie_game()
 
     def someone_won(self) -> bool:
         # TODO
