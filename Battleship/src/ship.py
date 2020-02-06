@@ -9,7 +9,7 @@ class Ship(object):
     def get_orientation(self, player_name: str) -> str:
         while True:
             orientation = input(
-                f'{player_name} enter horizontal or vertical for the orientation of {self.name} which is {self.size} long:')
+                f'{player_name} enter horizontal or vertical for the orientation of {self.name} which is {self.size} long: ')
             orientation = orientation.lower()
             prefixes_hor = ('h', 'hori', 'horiz', 'horizontal')
             prefixes_ver = ('v', 'vert', 'verti', 'vertical')

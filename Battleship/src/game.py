@@ -22,6 +22,7 @@ class Game(object):
         while not self.is_game_over():
             self.display_game_state()
             self.cur_player.take_turn(self.other_player())
+            self.display_game_state()
             self.change_turn()
 
         # because we always change turns after a player wins
@@ -33,8 +34,11 @@ class Game(object):
         self.display_the_winner()
 
     def display_game_state(self) -> None:
-        print(f'{self.cur_player.name}\'s Scanning Board\n {self.cur_player.scanning_board}')
-        print(f'{self.cur_player.name}\'s Board\n {self.cur_player.ship_board}')
+        print(f'{self.cur_player.name}\'s Scanning Board\n {self.cur_player.scanning_board}' + '\n')
+        print(f'{self.cur_player.name}\'s Board\n {self.cur_player.ship_board}' + '\n')
+
+    #def merge_board(self) -> None:
+
 
 
     def display_the_winner(self) -> None:
