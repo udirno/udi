@@ -15,6 +15,7 @@ class Player(object):
     def __init__(self, num : int, other_players: Iterable["Player"],
                  ships: Iterable["Ship"], num_rows: int, num_cols: int,
                  blank_char: str) -> None:
+        self.blank_char = blank_char
         self.player_num = num
         self.name = self.get_name_from_player(other_players)
         self.scanning_board = Board(num_rows, num_cols, blank_char)
@@ -57,7 +58,14 @@ class Player(object):
         while True:
             try:
                 tcell = self.get_target()
-                break
+                if not self.scanning_board.is_in_bounds(tcell):
+                    print(f'{tcell.row}, {tcell.col} is not in bounds.')
+                    continue
+                elif self.scanning_board.get_content(tcell) != self.blank_char:
+                    print(f'You have already fired at {tcell.row}, {tcell.col}.')
+                    continue
+                else:
+                    break
             except CellError as error:
                 print(error)
         scanning_mark = self.scanning_board.get_content(tcell)
@@ -65,10 +73,10 @@ class Player(object):
         new_scanning_mark = 'O' if opponent_ship == None else 'X'
         self.scanning_board.set_content(tcell, new_scanning_mark, False)
         if opponent_ship == None:
-            message = 'Miss'
+            message = 'Miss.'
         elif opponent.ship_board.intact_cell_count(opponent_ship, self.scanning_board) == 0:
             print(f'You hit {opponent.name}\'s {opponent_ship.name}' + '!')
-            message = f'You destroyed {opponent.name}\'s {opponent_ship.name}' + '!'
+            message = f'You destroyed {opponent.name}\'s {opponent_ship.name}'
         else:
             message = f'You hit {opponent.name}\'s {opponent_ship.name}' + '!'
         print(message)
@@ -76,4 +84,5 @@ class Player(object):
 
     def get_target(self) -> "Cell":
         str_cell = input(f'{self.name}, enter the location you want to fire at in the form row, column: ')
+
         return Cell.from_str(str_cell)
