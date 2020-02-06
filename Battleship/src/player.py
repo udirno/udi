@@ -29,7 +29,7 @@ class Player(object):
     def get_name_from_player(self, other_players: Iterable["Player"]) -> str:
         already_used_names = set([player.name for player in other_players])
         while True:
-            name = input(f'Player {self.player_num} please enter your name: ')
+            name = input(f'Player {self.player_num + 1} please enter your name: ')
             if name not in already_used_names:
                 return name
             else:
