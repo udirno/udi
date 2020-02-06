@@ -19,11 +19,11 @@ class Cell(object):
         try:
             row = int(row)
         except ValueError:
-            raise CellError(f'row needs to be an integer. {row} is not an integer')
+            raise CellError(f'Row should be an integer. {row} is NOT an integer')
         try:
             col = int(col)
         except ValueError:
-            raise CellError(f'col needs to be an integer. {col} is not an integer')
+            raise CellError(f'Column should to be an integer. {col} is NOT an integer')
         return cls(row, col) #returns object of class Cell
 
 
