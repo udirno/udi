@@ -31,7 +31,7 @@ class Game(object):
         }
 
         while True:
-            picked_type = input(f'Enter one of {list(possible_players)} for your type: ').strip()
+            picked_type = input(f"Enter one of {list(possible_players)} for Player 1's type: ").strip() #player_num??
             for name, type in possible_players.items():
                 # picked_type is a prefix of name if name startswith picked_type
                 if name.startswith(picked_type):
@@ -96,8 +96,6 @@ class Game(object):
                 result = False
                 break
         return result
-
-
 
         #return self.someone_won() or self.tie_game()
 

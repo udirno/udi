@@ -14,7 +14,7 @@ class CheatingAi(AiPlayer):
         super().__init__(num, all_players, ships_, num_rows_, num_cols_, blank_char_)
 
     def get_name_from_player(self, other_players: Iterable["Player"]) -> str:
-        return super().get_name_with_prefix('Cheating AI', other_players)
+        return super().get_name_with_prefix('Cheating Ai', other_players)
 
     def get_move(self, opponent: "Player") -> Move:
         if self.firing_locations is None:

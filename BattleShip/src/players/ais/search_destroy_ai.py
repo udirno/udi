@@ -31,12 +31,12 @@ class SearchDestroyAi(AiPlayer):
         self.firing_locations.remove(coord)
         return None if coord is None else Move(*coord)
 
-    def record_score(self, move : Move, score_msg : str):
-        super().record_score(move, score_msg)
-        if score_msg != 'Destroy':
+    def change_strategy(self, move : Move, score_msg : str):
+        super().change_strategy(move, score_msg)
+        if score_msg == 'Miss':
             return
         self.mode = "destroy"
-        for offset in [(-1, 0), (0, -1), (1, 0), (0, 1)]:
+        for offset in [(-1, 0), (0, 1), (1, 0), (0, -1)]:
             row = move.row + offset[0]
             col = move.col + offset[1]
             if row >= 0 and col >= 0 and self.scanning_board.is_blank(row,col):

@@ -19,7 +19,7 @@ class Player(object):
                  ships: Iterable["Ship"], num_rows: int, num_cols: int,
                  blank_char_: str) -> None:
         self.blank_char = blank_char_
-        self.player_num = num
+        self.player_num = num + 1
         self.name = self.get_name_from_player(other_players)
         self.scanning_board = Board(num_rows, num_cols, blank_char_)
         self.ship_board = ShipBoard(num_rows, num_cols, ships, blank_char_)
@@ -54,7 +54,7 @@ class Player(object):
         row_start, col_start = self.get_ship_start_coords(ship_, orientation)
         return ShipPlacement(ship_, orientation, row_start, col_start)
 
-    def record_score(self, move: Move, score_msg: str):
+    def change_strategy(self, move: Move, score_msg: str):
         pass
 
     def take_turn(self, opponent: "Player") -> None:
@@ -63,7 +63,7 @@ class Player(object):
             try:
                 move = self.get_move(opponent)
                 score_msg = move.make(self.scanning_board, opponent.name, opponent.ship_board)
-                self.record_score(move, score_msg)
+                self.change_strategy(move, score_msg)
                 return
             except MoveError as err:
                 print(err)
