@@ -1,6 +1,6 @@
 from typing import Iterable, Iterator, List, Tuple
-from .ship import Ship
-from .cell import Cell, CellError
+from src.ship import Ship
+from src.ship_placement import ShipPlacement
 
 ''' Examples of how to iterate over the board
 index = 0
@@ -72,83 +72,90 @@ class Board(object):
         gen_exp = (Cell(r, c) for c in range(len(self.contents)) for r in range(self.contents[0]))
         return gen_exp
 
-    def is_in_bounds(self, cell: "Cell") -> bool:
-        return (0 <= cell.row < self.num_rows and
-                0 <= cell.col < self.num_cols)
-    def get_content(self, cell: "Cell"):
-        if self.is_in_bounds(cell):
-            return self.contents[cell.row][cell.col]
+    def get_empty_coordinates(self) -> List[Tuple[int, int]]:
+        empty_coords = []
+        for row in range(self.num_rows):
+            for col in range(self.num_cols):
+                if self[row][col] == self.blank_char:
+                    empty_coords.append((row, col))
+        return empty_coords
 
-    def available(self, cell: "Cell") -> bool:
-        return self.is_in_bounds(cell) and \
-            self.get_content(cell) == self.blank_char
+    def is_in_bounds(self, row: int, col: int) -> bool:
+        return (0 <= row < self.num_rows and
+                0 <= col < self.num_cols)
 
-    '''
-    Place a piece in the cell if it is not occupied or out of bounds; otherwise raise CellError.
-    '''
-    def set_content(self, cell: "Cell", mark: str, check_occupied = True):
+    def is_blank(self, row: int, col: int) -> bool:
+        return self.is_in_bounds(row, col) and \
+               self.get_mark(row, col) == self.blank_char
+
+    def get_mark(self, row: int, col: int):
+        if self.is_in_bounds(row, col):
+            return self.contents[row][col]
+
+    '''Place a piece in the cell if it is not occupied or out of bounds; otherwise raise CellError.'''
+    def set_mark(self, row: int, col: int, mark: str, check_occupied = True):
         if not check_occupied:
-            self.contents[cell.row][cell.col] = mark
+            self.contents[row][col] = mark
         else:
-            if not self.is_in_bounds(cell):
-                raise CellError(f'{cell.row}, {cell.col} is not in bounds')
-            elif self.get_content(cell) != self.blank_char:
-                raise CellError(f"location {cell.row}, {cell.col} is already occupied")
+            if not self.is_in_bounds(row, col):
+                raise CellError(f'{row}, {col} is not in bounds')
+            elif self.get_mark(row, col) != self.blank_char:
+                raise CellError(f"location {row}, {col} is already occupied")
             else:
-                self.contents[cell.row][cell.col] = mark
+                self.contents[row][col] = mark
 
 ''' ShipBoard is derived from Board. It is a board with ships on it. '''
 class ShipBoard(Board):
     def __init__(self, num_rows: int, num_cols: int, ships: Iterable["Ship"], blank_char: str):
         super().__init__(num_rows, num_cols, blank_char)
         self.ships = ships
-        self.ship_placements = []
+        self.ship_placements = {}
 
 
-    ''' Check if placing ship at row, col with orientation is valid, i.e each cell
-        the ship is on, the board and the cell is empty, i.e. contains a blank
-        character '''
-    def ship_fits(self, ship: "Ship", scell: "Cell", orientation: str) -> bool:
+    ''' Check if each cell the ship would occupy on the board is empty, i.e. contains a blank character '''
+    def placement_valid(self, ship_placement : ShipPlacement) -> bool:
         result = True
-        ecell = ship.get_end_cell(scell, orientation)
-        for r in range(scell.row, ecell.row+1):
-            for c in range(scell.col, ecell.col+1):
-                if not self.available(Cell(r, c)):
+        for r in range(ship_placement.row_start, ship_placement.row_end + 1):
+            for c in range(ship_placement.col_start, ship_placement.col_end + 1):
+                if not self.is_blank(r, c):
                     result = False
                     break
             if not result:
                 break
         return result
 
-    '''
-    Loop over all cells covered by the ship and mark them with the first letter of the ship
+    ''' Mark each cell the ship occupies on the board  with the first letter of the ship
     name. Raise CellError if any of those cells are out of bounds or already occupied.
     '''
-    def place_ship(self, ship: "Ship", scell: "Cell", orientation: str) -> None:
-        ship_letter = ship.name[0]
-        ecell = ship.get_end_cell(scell, orientation)
-        for r in range(scell.row, ecell.row+1):
-            for c in range(scell.col, ecell.col+1):
-                self.set_content(Cell(r, c), ship_letter)
+    def place_ship(self, ship_placement : ShipPlacement) -> None:
+        self.ship_placements[ship_placement.ship] = ship_placement
+        ship_letter = ship_placement.ship.name[0]
+        for r in range(ship_placement.row_start, ship_placement.row_end+1):
+            for c in range(ship_placement.col_start, ship_placement.col_end+1):
+                try:
+                    self.set_mark(r, c, ship_letter)
+                except CellError as err_msg:
+                    print(err_msg)
 
-    def get_ship(self, cell: "Cells") -> "Ship":
-        mark = self.get_content(cell)
+    def get_ship(self, row: int, col: int) -> "Ship":
+        mark = self.get_mark(row, col)
         for ship in self.ships:
             ship_letter = ship.name[0]
             if mark == ship_letter:
                 return ship
         return None
 
-    def intact_cell_count(self, ship: "Ship", scanning_board: "Board") -> int:
-        intact_count = 0
-        scell, orientation = self.ship_placements[self.ships.index(ship)]
-        ecell = ship.get_end_cell(scell, orientation)
-        for c in range(scell.col, ecell.col + 1):
-            for r in range(scell.row, ecell.row + 1):
-                cell = Cell(r, c)
-                if scanning_board.get_content(cell) != 'X':
-                    intact_count += 1
-        return intact_count
+    def damaged_cell_count(self, ship: Ship, scanning_board: Board) -> int:
+        damaged_count = 0
+        ship_placement = self.ship_placements[ship]
+        for r in range(ship_placement.row_start, ship_placement.row_end + 1):
+            for c in range(ship_placement.col_start, ship_placement.col_end + 1):
+                if scanning_board.get_mark(r, c) == 'X':
+                    damaged_count += 1
+        return damaged_count
 
+    def ship_destroyed(self, ship: Ship, scanning_board: Board):
+        damaged_count = self.damaged_cell_count(ship, scanning_board)
+        return damaged_count == ship.length
 
 

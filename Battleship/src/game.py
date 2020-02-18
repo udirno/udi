@@ -1,23 +1,44 @@
-from typing import Iterable, TypeVar
-from .ship import Ship
-from .board import Board
-from .player import Player
+from typing import Iterable, Type, TypeVar
+from src.ship import Ship
+from src.board import Board
+from src.players.human_player import HumanPlayer
+from src.players.ais.random_ai import RandomAi
+from src.players.ais.search_destroy_ai import SearchDestroyAi
+from src.players.ais.cheating_ai import CheatingAi
 
 T = TypeVar('T')
 
-
 class Game(object):
-    def __init__(self, ship_args: {str, int}, num_rows: int, num_cols: int, blank_char: str = '*') -> None:
-        self.blank_char = blank_char
+    def __init__(self, ship_args: {str, int}, num_rows_: int, num_cols_: int, blank_char_: str = '*') -> None:
+        self.blank_char = blank_char_
         self.ships = []
         for ship_name, ship_size in ship_args.items():
             self.ships.append(Ship(ship_name, ship_size))
 
         self.players = []
         for player_num in range(2):
-            self.players.append(Player(player_num, self.players, self.ships,
-                                       num_rows, num_cols, blank_char))
+            player_type = self.pick_player_type()
+            self.players.append(player_type(player_num, self.players, self.ships,
+                                       num_rows_, num_cols_, blank_char_))
         self._cur_player_turn = 0
+
+    def pick_player_type(self) -> Type:
+        possible_players = {
+            'human': HumanPlayer,
+            'cheat': CheatingAi,
+            'search': SearchDestroyAi,
+            'random': RandomAi
+        }
+
+        while True:
+            picked_type = input(f'Pick one of {list(possible_players)} for your type: ').strip().lower()
+            for name, type in possible_players.items():
+                # picked_type is a prefix of name if name startswith picked_type
+                if name.startswith(picked_type):
+                    return type
+            else:
+                print(f'{picked_type} is not one of {list(possible_players)}')
+
 
     def play(self) -> None:
         while not self.is_game_over():
@@ -53,8 +74,6 @@ class Game(object):
         merged_board = self.merge_boards(self.cur_player.ship_board, self.other_player().scanning_board)
         print(f'{self.cur_player.name}\'s Board\n {merged_board}' + '\n')
 
-
-
     def display_the_winner(self) -> None:
         print(f'{self.cur_player.name} won the game!')
 
@@ -73,8 +92,7 @@ class Game(object):
         result = True
         opponent = self.other_player()
         for ship in self.ships:
-            intact_count = self.cur_player.ship_board.intact_cell_count(ship, opponent.scanning_board)
-            if intact_count != 0:
+            if not self.cur_player.ship_board.ship_destroyed(ship, opponent.scanning_board):
                 result = False
                 break
         return result
