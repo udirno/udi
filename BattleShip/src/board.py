@@ -1,7 +1,6 @@
 from typing import Iterable, Iterator, List, Tuple
 from src.ship import Ship
 from src.ship_placement import ShipPlacement
-from src.move import Move, MoveError
 
 ''' Examples of how to iterate over the board
 index = 0
@@ -93,15 +92,15 @@ class Board(object):
         if self.is_in_bounds(row, col):
             return self.contents[row][col]
 
-    '''Place a piece in the cell if it is not occupied or out of bounds; otherwise raise MoveError.'''
+    '''Place a piece in the cell if it is not occupied or out of bounds; otherwise raise ValueError.'''
     def set_mark(self, row: int, col: int, mark: str, check_occupied = True):
         if not check_occupied:
             self.contents[row][col] = mark
         else:
             if not self.is_in_bounds(row, col):
-                raise MoveError(f'{row}, {col} is not in bounds')
+                raise ValueError(f'{row}, {col} is not in bounds')
             elif self.get_mark(row, col) != self.blank_char:
-                raise MoveError(f"location {row}, {col} is already occupied")
+                raise ValueError(f"location {row}, {col} is already occupied")
             else:
                 self.contents[row][col] = mark
 
@@ -126,7 +125,7 @@ class ShipBoard(Board):
         return result
 
     ''' Mark each cell the ship occupies on the board  with the first letter of the ship
-    name. Raise MoveError if any of those cells are out of bounds or already occupied.
+    name. Raise ValueError if any of those cells are out of bounds or already occupied.
     '''
     def place_ship(self, ship_placement : ShipPlacement) -> None:
         self.ship_placements[ship_placement.ship] = ship_placement
@@ -135,7 +134,7 @@ class ShipBoard(Board):
             for c in range(ship_placement.col_start, ship_placement.col_end+1):
                 try:
                     self.set_mark(r, c, ship_letter)
-                except MoveError as err_msg:
+                except ValueError as err_msg:
                     print(err_msg)
 
     def get_ship(self, row: int, col: int) -> "Ship":
@@ -145,6 +144,14 @@ class ShipBoard(Board):
             if mark == ship_letter:
                 return ship
         return None
+
+    def get_ship_coordinates(self):
+        ship_coords = []
+        for row in range(self.num_rows):
+            for col in range(self.num_cols):
+                if self[row][col] != self.blank_char:
+                    ship_coords.append((row, col))
+        return ship_coords
 
     def damaged_cell_count(self, ship: Ship, scanning_board: Board) -> int:
         damaged_count = 0

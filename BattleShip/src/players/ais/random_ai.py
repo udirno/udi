@@ -15,7 +15,7 @@ class RandomAi(AiPlayer):
     def get_name_from_player(self, other_players: Iterable["Player"]) -> str:
         return super().get_name_with_prefix('Random AI', other_players)
 
-    def get_move(self, the_board: "board.Board") -> "move.Move":
+    def get_move(self, opponent : "Player") -> Move:
         coord = random.choice(self.firing_locations)
         self.firing_locations.remove(coord)
         return Move(*coord)

@@ -24,14 +24,14 @@ class Game(object):
 
     def pick_player_type(self) -> Type:
         possible_players = {
-            'human': HumanPlayer,
-            'cheat': CheatingAi,
-            'search': SearchDestroyAi,
-            'random': RandomAi
+            'Human': HumanPlayer,
+            'CheatingAi': CheatingAi,
+            'SearchDestroyAi': SearchDestroyAi,
+            'RandomAi': RandomAi
         }
 
         while True:
-            picked_type = input(f'Pick one of {list(possible_players)} for your type: ').strip().lower()
+            picked_type = input(f'Enter one of {list(possible_players)} for your type: ').strip()
             for name, type in possible_players.items():
                 # picked_type is a prefix of name if name startswith picked_type
                 if name.startswith(picked_type):

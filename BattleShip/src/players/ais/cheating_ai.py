@@ -16,7 +16,9 @@ class CheatingAi(AiPlayer):
     def get_name_from_player(self, other_players: Iterable["Player"]) -> str:
         return super().get_name_with_prefix('Cheating AI', other_players)
 
-    def get_move(self, the_board: "board.Board") -> "move.Move":
-        empty_coordinates = the_board.get_empty_coordinates()
-        coord = random.choice(empty_coordinates)
-        return move.Move(self, *coord)
+    def get_move(self, opponent: "Player") -> Move:
+        if self.firing_locations is None:
+            self.firing_locations = opponent.ship_board.get_ship_coordinates()
+        coord = random.choice(self.firing_locations)
+        self.firing_locations.remove(coord)
+        return Move(*coord)

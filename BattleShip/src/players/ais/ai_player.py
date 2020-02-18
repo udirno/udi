@@ -11,6 +11,7 @@ class AiPlayer(Player):
                  ships_ : Iterable["Ship"], num_rows_ : int, num_cols_ : int,
                  blank_char_: str) -> None:
         super().__init__(num, all_players, ships_, num_rows_, num_cols_, blank_char_)
+        self.firing_locations = None
 
     def get_random_name(self, other_players: Iterable["Player"]) -> str:
         possible_names = ['Bob', 'Sally', 'Laura', 'Mike']
