@@ -12,13 +12,22 @@ class AiPlayer(Player):
                  blank_char_: str) -> None:
         super().__init__(num, all_players, ships_, num_rows_, num_cols_, blank_char_)
 
-    def get_name_from_player(self, other_players: Iterable["Player"]) -> str:
+    def get_random_name(self, other_players: Iterable["Player"]) -> str:
         possible_names = ['Bob', 'Sally', 'Laura', 'Mike']
         other_player_names = [player.name for player in other_players]
         while True:
             name = random.choice(possible_names)
             if name not in other_player_names:
                 return name
+
+    def get_name_with_prefix(self, prefix: str, other_players: Iterable["Player"]) -> str:
+        already_used_names = set([player.name for player in other_players])
+        while True:
+            name = f'{prefix} {self.player_num}'
+            if name not in already_used_names:
+                return name
+            else:
+                prefix += 'X'
 
     def get_ship_orientation(self, ship_: Ship) -> Orientation:
         return random.choice([Orientation.HORIZONTAL, Orientation.VERTICAL])

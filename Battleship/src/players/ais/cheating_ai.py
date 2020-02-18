@@ -14,11 +14,9 @@ class CheatingAi(AiPlayer):
         super().__init__(num, all_players, ships_, num_rows_, num_cols_, blank_char_)
 
     def get_name_from_player(self, other_players: Iterable["Player"]) -> str:
-        already_used_names = set([player.name for player in other_players])
-        prefix = 'Cheating AI'
-        while True:
-            name = f'{prefix} {player_number}'
-            if name not in already_used_names:
-                return name
-            else:
-                prefix += 'X'
+        return super().get_name_with_prefix('Cheating AI', other_players)
+
+    def get_move(self, the_board: "board.Board") -> "move.Move":
+        empty_coordinates = the_board.get_empty_coordinates()
+        coord = random.choice(empty_coordinates)
+        return move.Move(self, *coord)

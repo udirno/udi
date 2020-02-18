@@ -1,6 +1,7 @@
 from typing import Iterable, Iterator, List, Tuple
 from src.ship import Ship
 from src.ship_placement import ShipPlacement
+from src.move import Move, MoveError
 
 ''' Examples of how to iterate over the board
 index = 0
@@ -92,15 +93,15 @@ class Board(object):
         if self.is_in_bounds(row, col):
             return self.contents[row][col]
 
-    '''Place a piece in the cell if it is not occupied or out of bounds; otherwise raise CellError.'''
+    '''Place a piece in the cell if it is not occupied or out of bounds; otherwise raise MoveError.'''
     def set_mark(self, row: int, col: int, mark: str, check_occupied = True):
         if not check_occupied:
             self.contents[row][col] = mark
         else:
             if not self.is_in_bounds(row, col):
-                raise CellError(f'{row}, {col} is not in bounds')
+                raise MoveError(f'{row}, {col} is not in bounds')
             elif self.get_mark(row, col) != self.blank_char:
-                raise CellError(f"location {row}, {col} is already occupied")
+                raise MoveError(f"location {row}, {col} is already occupied")
             else:
                 self.contents[row][col] = mark
 
@@ -125,7 +126,7 @@ class ShipBoard(Board):
         return result
 
     ''' Mark each cell the ship occupies on the board  with the first letter of the ship
-    name. Raise CellError if any of those cells are out of bounds or already occupied.
+    name. Raise MoveError if any of those cells are out of bounds or already occupied.
     '''
     def place_ship(self, ship_placement : ShipPlacement) -> None:
         self.ship_placements[ship_placement.ship] = ship_placement
@@ -134,7 +135,7 @@ class ShipBoard(Board):
             for c in range(ship_placement.col_start, ship_placement.col_end+1):
                 try:
                     self.set_mark(r, c, ship_letter)
-                except CellError as err_msg:
+                except MoveError as err_msg:
                     print(err_msg)
 
     def get_ship(self, row: int, col: int) -> "Ship":

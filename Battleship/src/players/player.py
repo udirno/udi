@@ -48,14 +48,7 @@ class Player(object):
     def get_move(self, board_: Board) -> Move:
         ...
 
-    def get_name_from_player(self, other_players: Iterable["Player"]) -> str:
-        already_used_names = set([player.name for player in other_players])
-        while True:
-            name = input(f'Player {self.player_num + 1} please enter your name: ')
-            if name not in already_used_names:
-                return name
-            else:
-                print(f'{name} has already been used. Pick another name.')
+
 
     ''' Get start cell and orientation for the ship that fits on the board'''
     def get_ship_placement(self, ship_ : Ship) -> ShipPlacement:
@@ -72,8 +65,3 @@ class Player(object):
                 return
             except MoveError as err:
                 print(err)
-
-    def get_target(self) -> "Move":
-        str_cell = input(f'{self.name}, enter the location you want to fire at in the form row, column: ')
-
-        return Move.from_str(str_cell)
