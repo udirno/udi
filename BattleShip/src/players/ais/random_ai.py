@@ -13,7 +13,7 @@ class RandomAi(AiPlayer):
         self.firing_locations = self.scanning_board.get_empty_coordinates()
 
     def get_name_from_player(self, other_players: Iterable["Player"]) -> str:
-        return super().get_name_with_prefix('Random AI', other_players)
+        return super().get_name_with_prefix('Random Ai', other_players)
 
     def get_move(self, opponent : "Player") -> Move:
         coord = random.choice(self.firing_locations)

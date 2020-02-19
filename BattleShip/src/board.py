@@ -135,7 +135,7 @@ class ShipBoard(Board):
                 try:
                     self.set_mark(r, c, ship_letter)
                 except ValueError as err_msg:
-                    print(err_msg)
+                    raise ValueError(err_msg)
 
     def get_ship(self, row: int, col: int) -> "Ship":
         mark = self.get_mark(row, col)

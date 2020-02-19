@@ -42,8 +42,6 @@ class AiPlayer(Player):
             col = random.randint(0, self.ship_board.num_cols - 1)
         return row, col
 
-    def get_move(self, the_board: "board.Board") -> "move.Move":
-        empty_coordinates = the_board.get_empty_coordinates()
-        coord = random.choice(empty_coordinates)
-        return move.Move(self, *coord)
+
+
 

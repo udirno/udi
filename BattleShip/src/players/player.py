@@ -25,8 +25,13 @@ class Player(object):
         self.ship_board = ShipBoard(num_rows, num_cols, ships, blank_char_)
         print(f'{self.name}\'s Placement Board\n {self.ship_board}')
         for ship in ships:
-            ship_placement = self.get_ship_placement(ship)
-            self.ship_board.place_ship(ship_placement)
+            while True:
+                ship_placement = self.get_ship_placement(ship)
+                try:
+                    self.ship_board.place_ship(ship_placement)
+                    break
+                except ValueError as err_msg:
+                    print(err_msg)
             print(f'{self.name}\'s Placement Board\n {self.ship_board}')
 
     def __str__(self) -> str:

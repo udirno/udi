@@ -28,7 +28,10 @@ class SearchDestroyAi(AiPlayer):
             coord = self.destroy_locations.popleft()
         if coord not in self.firing_locations:
             print(f'mode = {self.mode}, coord = {coord}, firing locations = {self.firing_locations}')
-        self.firing_locations.remove(coord)
+        try:
+            self.firing_locations.remove(coord)
+        except ValueError:
+            pass
         return None if coord is None else Move(*coord)
 
     def change_strategy(self, move : Move, score_msg : str):

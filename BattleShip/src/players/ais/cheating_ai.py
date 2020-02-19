@@ -19,6 +19,10 @@ class CheatingAi(AiPlayer):
     def get_move(self, opponent: "Player") -> Move:
         if self.firing_locations is None:
             self.firing_locations = opponent.ship_board.get_ship_coordinates()
-        coord = random.choice(self.firing_locations)
-        self.firing_locations.remove(coord)
+            self.firing_locations.reverse()
+        coord = self.firing_locations[-1]
+        #print(f'coord = {coord} from firing locations = {self.firing_locations}')
+        self.firing_locations.pop()
         return Move(*coord)
+
+
