@@ -17,12 +17,12 @@ class Game(object):
 
         self.players = []
         for player_num in range(2):
-            player_type = self.pick_player_type()
+            player_type = self.pick_player_type(player_num)
             self.players.append(player_type(player_num, self.players, self.ships,
                                        num_rows_, num_cols_, blank_char_))
         self._cur_player_turn = 0
 
-    def pick_player_type(self) -> Type:
+    def pick_player_type(self, player_num) -> Type:
         possible_players = {
             'Human': HumanPlayer,
             'CheatingAi': CheatingAi,
@@ -31,10 +31,10 @@ class Game(object):
         }
 
         while True:
-            picked_type = input(f"Enter one of {list(possible_players)} for Player 1's type: ").strip() #player_num??
+            picked_type = input(f"Enter one of {list(possible_players)} for Player {player_num + 1}'s type: ").strip().lower()
             for name, type in possible_players.items():
                 # picked_type is a prefix of name if name startswith picked_type
-                if name.startswith(picked_type):
+                if name.lower().startswith(picked_type):
                     return type
             else:
                 print(f'{picked_type} is not one of {list(possible_players)}')

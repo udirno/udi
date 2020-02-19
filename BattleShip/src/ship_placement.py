@@ -9,7 +9,7 @@ class ShipPlacement(object):
         self.orientation = orientation_
         self.row_start, self.col_start = row_start_,  col_start_
         self.row_end, self.col_end = self.get_ship_end_coords(ship_, orientation_, row_start_, col_start_)
-        print(f'start ({self.row_start}, {self.col_start}), end ({self.row_end}, {self.col_end})')
+        #print(f'start ({self.row_start}, {self.col_start}), end ({self.row_end}, {self.col_end})')
         if self.row_end is None:
             raise NotImplementedError(f'Placing ships {orientation_} is not supported yet.')
 
