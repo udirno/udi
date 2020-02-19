@@ -42,7 +42,7 @@ class Move(object):
             new_mark = 'O' if opponent_ship == None else 'X'
             scan_board.set_mark(self.row, self.col, new_mark, False)
             if opponent_ship == None:
-                score_msg = print_msg = 'Miss.'
+                score_msg = print_msg = 'Miss'
             elif opponent_board.damaged_cell_count(opponent_ship, scan_board) == opponent_ship.length:
                 print(f'You hit {opponent_name}\'s {opponent_ship.name}' + '!')
                 print_msg = f'You destroyed {opponent_name}\'s {opponent_ship.name}'
