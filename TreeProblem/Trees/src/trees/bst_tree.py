@@ -23,8 +23,10 @@ class BST(Generic[T, K]):
         It serves the same role as the key function in the min, max, and sorted builtin
         functions
         """
-        self.root = ...
-        ...
+        self.root = root
+        self.key = key
+
+
 
     @property
     def height(self) -> int:
@@ -32,7 +34,16 @@ class BST(Generic[T, K]):
         Compute the height of the tree. If the tree is empty its height is -1
         :return:
         """
-        ...
+        return self.height_helper(self.root)
+
+    def height_helper(self, start: BSTNode[T]):
+        if start is None:
+            return 0
+        else:
+            left_height = self.height_helper(start.left)
+            right_height = self.height_helper(start.right)
+            return 1 + max(left_height, right_height)
+
 
     def __len__(self) -> int:
         """
@@ -40,13 +51,16 @@ class BST(Generic[T, K]):
         """
         ...
 
-    def add_value(self, value: T) -> None:
-        """
-        Add value to this BST
-        :param value:
-        :return:
-        """
-        ...
+    def left_most(self, node):
+        while node and node.left:
+            node = node.left
+        return node
+
+    def right_most(self, node):
+        while node and node.right:
+            node = node.right
+        return node
+
 
     def get_node(self, value: K) -> BSTNode[T]:
         """
@@ -55,7 +69,18 @@ class BST(Generic[T, K]):
         :raises MissingValueError if there is no node with the specified value
         :return:
         """
-        ...
+        return self.search(self.root, value)
+
+    def search(self, start: BSTNode[T], value: K):
+        if start is None:  # empty node
+            return None
+        elif value == start.value:  # match
+            return start
+        elif value < start.value:  # search left
+            return self.get_node(start.left, value)
+        else:  # search right
+            return self.get_node(start.right, value)
+
 
     def get_max_node(self) -> BSTNode[T]:
         """
@@ -63,14 +88,43 @@ class BST(Generic[T, K]):
         :return:
         :raises EmptyTreeError if the tree is empty
         """
-        ...
+        return self.right_most(self.root)
 
     def get_min_node(self) -> BSTNode[T]:
         """
         Return the node with the smallest value in the BST
         :return:
         """
-        ...
+        return self.left_most(self.root)
+
+    def add_value(self, value: T) -> None:
+        """
+        Add value to this BST
+        :param value:
+        :return:
+        """
+        self.bst_insert(self.root, value)
+
+    def bst_insert(self, start: BSTNode[T], value: T):
+        if start is None:  # found the spot to add the node
+            start = BSTNode(value)
+        elif value < start.value:  # add_left
+            start.left = self.bst_insert(value, start.left)
+            start.left.parent = start
+        else:  # add right
+            start.right = self.bst_insert(value, start.right)
+            start.right.parent = start
+        return start
+
+    def successor(self, node : BSTNode[T]):
+        if node.right:
+            node = self.left_most(node.right)
+        else:
+            parent = node.parent
+            while parent and node == parent.right:
+                node = parent
+                parent = node.parent
+        return node
 
     def remove_value(self, value: T) -> None:
         """
@@ -82,7 +136,21 @@ class BST(Generic[T, K]):
         :return:
         :raises MissingValueError if the node does not exist
         """
-        ...
+        value_node = self.get_node(value)
+        if not value_node:
+            return
+        # splice the value_node if it has one or no children; otherwise, splice its successor
+        splice_node = value_node if not value_node.right or not value_node.left else self.successor(value_node)
+        # Splice_node has only one child: make its parent adopt that child
+        only_child = splice_node.left if splice_node.left else splice_node.right
+        parent = splice_node.parent
+        if parent.left == splice_node:
+            parent.left = only_child
+        else:
+            parent.right = only_child
+        # if splice_node is not the value node then move its content to the value node
+        value_node.value = splice_node.value
+        del splice_node
 
     def __eq__(self, other: object) -> bool:
         if self is other:
