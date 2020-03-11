@@ -157,6 +157,8 @@ class BST(Generic[T, K]):
         only_child = splice_node.left if splice_node.left else splice_node.right
         if only_child:
             only_child.parent = parent
+        if not parent:
+            self.root = only_child
         if parent.left == splice_node:
             parent.left = only_child
         else:
