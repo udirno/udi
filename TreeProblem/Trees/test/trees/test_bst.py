@@ -99,7 +99,7 @@ class TestBST(unittest.TestCase):
         self.assertEqual(len(tree), 5)
         tree.remove_value(80)
         self.assertEqual(len(tree), 4)
-        tree.add_value(200)
+        tree.remove_value(200)
         self.assertEqual(len(tree), 3)
         self.assertEqual(tree.get_max_node().value, 100)
 

@@ -128,8 +128,7 @@ class BST(Generic[T, K]):
 
     def successor(self, node : BSTNode[T]):
         if node.right:
-            node = self.left_most(node.right)
-            return node
+            return self.left_most(node.right)
         else:
             parent = node.parent
             while parent and node == parent.right:
@@ -152,9 +151,12 @@ class BST(Generic[T, K]):
             return
         # splice the value_node if it has one or no children; otherwise, splice its successor
         splice_node = value_node if not value_node.right or not value_node.left else self.successor(value_node)
+        parent = splice_node.parent
+
         # Splice_node has only one child: make its parent adopt that child
         only_child = splice_node.left if splice_node.left else splice_node.right
-        parent = splice_node.parent
+        if only_child:
+            only_child.parent = parent
         if parent.left == splice_node:
             parent.left = only_child
         else:
