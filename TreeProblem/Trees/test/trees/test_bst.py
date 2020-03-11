@@ -92,6 +92,17 @@ class TestBST(unittest.TestCase):
         fill_int_tree(tree)
         self.assertEqual(tree.height, 2)
 
+    def test_len(self):
+        tree = BST()
+        fill_int_tree(tree)
+        self.assertEqual(tree.get_max_node().value, 200)
+        self.assertEqual(len(tree), 5)
+        tree.remove_value(80)
+        self.assertEqual(len(tree), 4)
+        tree.add_value(200)
+        self.assertEqual(len(tree), 3)
+        self.assertEqual(tree.get_max_node().value, 100)
+
     def test_remove_node_failure(self):
         tree = BST()
         fill_int_tree(tree)
