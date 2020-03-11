@@ -129,12 +129,13 @@ class BST(Generic[T, K]):
     def successor(self, node : BSTNode[T]):
         if node.right:
             node = self.left_most(node.right)
+            return node
         else:
             parent = node.parent
             while parent and node == parent.right:
                 node = parent
                 parent = node.parent
-        return node
+            return parent
 
     def remove_value(self, value: T) -> None:
         """
