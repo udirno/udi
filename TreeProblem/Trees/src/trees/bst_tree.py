@@ -121,7 +121,7 @@ class BST(Generic[T, K]):
         elif value < start.value:  # add_left
             start.left = self.bst_insert(start.left, value)
             start.left.parent = start
-        elif value > start.value:  # add right
+        else:  # add right
             start.right = self.bst_insert(start.right, value)
             start.right.parent = start
         return start

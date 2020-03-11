@@ -2,6 +2,12 @@ import unittest
 from Trees.src.trees.bst_tree import BST
 from Trees.src.nodes.bst_node import BSTNode
 
+def fill_tree(tree : BST[int, int]) -> None:
+    tree.add_value(100)
+    tree.add_value(80)
+    tree.add_value(200)
+    tree.add_value(90)
+    tree.add_value(70)
 
 class TestBST(unittest.TestCase):
     def test_create_empty_tree(self):
@@ -11,11 +17,7 @@ class TestBST(unittest.TestCase):
 
     def test_create_tree(self):
         tree = BST()
-        tree.add_value(100)
-        tree.add_value(80)
-        tree.add_value(200)
-        tree.add_value(90)
-        tree.add_value(70)
+        fill_tree(tree)
 
         root = BSTNode(100)
         root.left = BSTNode(80)
@@ -28,11 +30,7 @@ class TestBST(unittest.TestCase):
 
     def test_tree_not_eq(self):
         tree = BST()
-        tree.add_value(100)
-        tree.add_value(80)
-        tree.add_value(200)
-        tree.add_value(90)
-        tree.add_value(70)
+        fill_tree(tree)
 
         root = BSTNode(100)
         root.left = BSTNode(80)
@@ -46,89 +44,49 @@ class TestBST(unittest.TestCase):
 
     def test_duplicate_insert(self):
         tree = BST()
-        tree.add_value(100)
+        fill_tree(tree)
+        self.assertEqual(len(tree), 5)
         tree.add_value(80)
-        tree.add_value(200)
-        tree.add_value(90)
-        self.assertEqual(len(tree), 4)
+        self.assertEqual(len(tree), 6)
         tree.add_value(80)
-        self.assertEqual(len(tree), 4)
+        self.assertEqual(len(tree),7)
 
     def test_get_node(self):
         tree = BST()
-        tree.add_value(100)
-        tree.add_value(80)
-        tree.add_value(200)
-        tree.add_value(90)
-        tree.add_value(70)
-
+        fill_tree(tree)
         value_node = tree.get_node(80)
         self.assertEqual(value_node.value, 80)
 
     def test_get_node_failure(self):
         tree = BST()
-        tree.add_value(100)
-        tree.add_value(80)
-        tree.add_value(200)
-        tree.add_value(90)
-        tree.add_value(70)
-
+        fill_tree(tree)
         value_node = tree.get_node(50)
         self.assertIsNone(value_node)
 
     def test_get_max_node(self):
         tree = BST()
-        tree.add_value(100)
-        tree.add_value(80)
-        tree.add_value(200)
-        tree.add_value(90)
-        tree.add_value(70)
-
+        fill_tree(tree)
         self.assertEqual(tree.get_max_node().value, 200)
 
     def test_get_min_node(self):
         tree = BST()
-        tree.add_value(100)
-        tree.add_value(80)
-        tree.add_value(200)
-        tree.add_value(90)
-        tree.add_value(70)
-
+        fill_tree(tree)
         self.assertEqual(tree.get_min_node().value, 70)
 
     def test_len(self):
         tree = BST()
-        tree.add_value(100)
-        tree.add_value(80)
-        tree.add_value(200)
-        tree.add_value(90)
-        tree.add_value(70)
-
+        fill_tree(tree)
         self.assertEqual(len(tree), 5)
 
     def test_height(self):
         tree = BST()
-        tree.add_value(100)
-        tree.add_value(80)
-        tree.add_value(200)
-        tree.add_value(90)
-        tree.add_value(70)
-
+        fill_tree(tree)
         self.assertEqual(tree.height, 3)
 
     def test_remove_node_failure(self):
         tree = BST()
-        tree.add_value(100)
-        tree.add_value(80)
-        tree.add_value(200)
-        tree.add_value(90)
-        tree.add_value(70)
-
+        fill_tree(tree)
         self.assertEqual(tree.remove_value(60), None)
-
-
-
-
 
 if __name__ == '__main__':
     unittest.main()
