@@ -69,8 +69,7 @@ class TestBST(unittest.TestCase):
     def test_get_node_failure(self):
         tree = BST()
         fill_int_tree(tree)
-        value_node = tree.get_node(50)
-        self.assertIsNone(value_node)
+        self.assertRaises(MissingValueError, tree.get_node, 50)
 
     def test_get_max_node(self):
         tree = BST()
@@ -106,8 +105,7 @@ class TestBST(unittest.TestCase):
     def test_remove_node_failure(self):
         tree = BST()
         fill_int_tree(tree)
-        self.assertEqual(tree.remove_value(60), None)
-        #self.assertRaises(MissingValueError, tree.remove_value, 200)
+        self.assertRaises(MissingValueError, tree.remove_value, 60)
         
     def test_str_trees(self):
         tree = BST(None, lambda x: x.lower())
@@ -144,8 +142,6 @@ class TestBST(unittest.TestCase):
 
         cmp_tree = BST(root)
         self.assertEqual(tree, cmp_tree)
-
-
 
 if __name__ == '__main__':
     unittest.main()

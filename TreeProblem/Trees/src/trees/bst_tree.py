@@ -6,6 +6,8 @@ from Trees.src.nodes.bst_node import BSTNode
 T = TypeVar('T')
 K = TypeVar('K')
 
+class MissingValueError(Exception):
+    ...
 
 class BST(Generic[T, K]):
     """
@@ -25,8 +27,6 @@ class BST(Generic[T, K]):
         """
         self.root = root
         self.key = key
-
-
 
     @property
     def height(self) -> int:
@@ -69,7 +69,6 @@ class BST(Generic[T, K]):
             node = node.right
         return node
 
-
     def get_node(self, value: K) -> BSTNode[T]:
         """
         Get the node with the specified value
@@ -77,7 +76,11 @@ class BST(Generic[T, K]):
         :raises MissingValueError if there is no node with the specified value
         :return:
         """
-        return self.search(self.root, value)
+        value_node = self.search(self.root, value)
+        if not value_node:
+            raise MissingValueError
+        else:
+            return value_node
 
     def search(self, start: BSTNode[T], value: K):
         if start is None:  # empty node
@@ -146,9 +149,11 @@ class BST(Generic[T, K]):
         :return:
         :raises MissingValueError if the node does not exist
         """
-        value_node = self.get_node(value)
-        if not value_node:
-            return
+        try:
+            value_node = self.get_node(value)
+        except MissingValueError as error_msg:
+            raise MissingValueError(error_msg)
+
         # splice the value_node if it has one or no children; otherwise, splice its successor
         splice_node = value_node if not value_node.right or not value_node.left else self.successor(value_node)
         parent = splice_node.parent
