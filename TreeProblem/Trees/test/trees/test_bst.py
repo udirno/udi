@@ -107,12 +107,32 @@ class TestBST(unittest.TestCase):
         tree = BST()
         fill_int_tree(tree)
         self.assertEqual(tree.remove_value(60), None)
+        #self.assertRaises(MissingValueError, tree.remove_value, 200)
         
     def test_str_trees(self):
         tree = BST(None, lambda x: x.lower())
         fill_str_tree(tree)
         value_node = tree.get_node("orange")
         self.assertEqual(value_node.value, "Orange")
+
+    def test_internal_node_with_two_children(self):
+        tree = BST()
+        fill_int_tree(tree)
+        tree.add_value(50)
+        tree.add_value(95)
+        tree.remove_value(80)
+
+        root = BSTNode(100)
+        root.left = BSTNode(90)
+        root.right = BSTNode(200)
+        root.left.left = BSTNode(70)
+        root.left.right = BSTNode(95)
+        root.left.left.left = BSTNode(50)
+
+        cmp_tree = BST(root)
+        self.assertEqual(tree, cmp_tree)
+
+
 
 if __name__ == '__main__':
     unittest.main()

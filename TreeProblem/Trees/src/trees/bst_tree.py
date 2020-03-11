@@ -118,7 +118,7 @@ class BST(Generic[T, K]):
     def bst_insert(self, start: BSTNode[T], value: T):
         if start is None:  # found the spot to add the node
             start = BSTNode(value)
-        elif value < start.value:  # add_left
+        elif self.key(value) < self.key(start.value):  # add_left
             start.left = self.bst_insert(start.left, value)
             start.left.parent = start
         else:  # add right
