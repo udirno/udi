@@ -115,7 +115,7 @@ class TestBST(unittest.TestCase):
         value_node = tree.get_node("orange")
         self.assertEqual(value_node.value, "Orange")
 
-    def test_internal_node_with_two_children(self):
+    def test_remove_internal_node_with_two_children(self):
         tree = BST()
         fill_int_tree(tree)
         tree.add_value(50)
@@ -128,6 +128,19 @@ class TestBST(unittest.TestCase):
         root.left.left = BSTNode(70)
         root.left.right = BSTNode(95)
         root.left.left.left = BSTNode(50)
+
+        cmp_tree = BST(root)
+        self.assertEqual(tree, cmp_tree)
+
+    def test_remove_root_with_two_children(self):
+        tree = BST()
+        fill_int_tree(tree)
+        tree.remove_value(100)
+
+        root = BSTNode(200)
+        root.left = BSTNode(80)
+        root.left.left = BSTNode(70)
+        root.left.right = BSTNode(90)
 
         cmp_tree = BST(root)
         self.assertEqual(tree, cmp_tree)
