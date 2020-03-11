@@ -111,16 +111,18 @@ class BST(Generic[T, K]):
         :param value:
         :return:
         """
-        self.bst_insert(self.root, value)
+        value_node = self.bst_insert(self.root, value)
+        if not self.root:
+            self.root = value_node
 
     def bst_insert(self, start: BSTNode[T], value: T):
         if start is None:  # found the spot to add the node
             start = BSTNode(value)
         elif value < start.value:  # add_left
-            start.left = self.bst_insert(value, start.left)
+            start.left = self.bst_insert(start.left, value)
             start.left.parent = start
         else:  # add right
-            start.right = self.bst_insert(value, start.right)
+            start.right = self.bst_insert(start.right, value)
             start.right.parent = start
         return start
 
