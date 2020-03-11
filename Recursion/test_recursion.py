@@ -47,6 +47,15 @@ class PySampleTests(unittest.TestCase):
         self.assertEqual(rs.get_best_backpack(items, 5), [])
         self.assertEqual(rs.get_best_backpack(items, 35), [])
         self.assertEqual(rs.get_best_backpack(items, 79), items[:2])
+
+        items = [Item('Ring', 43, 43),
+                 Item('Earring', 36, 40),
+                 Item('Necklace', 80, 80),
+                 Item('Diamond', 70, 68)]
+        self.assertEqual(rs.get_best_backpack(items, 5), [])
+        self.assertEqual(rs.get_best_backpack(items, 35), [])
+        self.assertEqual(rs.get_best_backpack(items, 80), items[:2])
+
         
         
 if __name__ == '__main__':

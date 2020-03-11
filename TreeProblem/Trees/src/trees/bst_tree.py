@@ -49,7 +49,15 @@ class BST(Generic[T, K]):
         """
         :return: the number of nodes in the tree
         """
-        ...
+        return self.len_helper(self.root)
+
+    def len_helper(self, start: BSTNode[T]):
+        if start is None:
+            return 0
+        else:
+            left_len = self.len_helper(start.left)
+            right_len = self.len_helper(start.right)
+            return left_len + 1 + right_len
 
     def left_most(self, node):
         while node and node.left:
