@@ -85,9 +85,9 @@ class BST(Generic[T, K]):
         elif value == start.value:  # match
             return start
         elif value < start.value:  # search left
-            return self.get_node(start.left, value)
+            return self.search(start.left, value)
         else:  # search right
-            return self.get_node(start.right, value)
+            return self.search(start.right, value)
 
 
     def get_max_node(self) -> BSTNode[T]:
@@ -121,7 +121,7 @@ class BST(Generic[T, K]):
         elif value < start.value:  # add_left
             start.left = self.bst_insert(start.left, value)
             start.left.parent = start
-        else:  # add right
+        elif value > start.value:  # add right
             start.right = self.bst_insert(start.right, value)
             start.right.parent = start
         return start

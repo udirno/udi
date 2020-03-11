@@ -45,10 +45,36 @@ class TestBST(unittest.TestCase):
         self.assertNotEqual(tree, cmp_tree)
 
     def test_duplicate_insert(self):
-        ...
+        tree = BST()
+        tree.add_value(100)
+        tree.add_value(80)
+        tree.add_value(200)
+        tree.add_value(90)
+        self.assertEqual(len(tree), 4)
+        tree.add_value(80)
+        self.assertEqual(len(tree), 4)
 
     def test_get_node(self):
-        ...
+        tree = BST()
+        tree.add_value(100)
+        tree.add_value(80)
+        tree.add_value(200)
+        tree.add_value(90)
+        tree.add_value(70)
+
+        value_node = tree.get_node(80)
+        self.assertEqual(value_node.value, 80)
+
+    def test_get_node_failure(self):
+        tree = BST()
+        tree.add_value(100)
+        tree.add_value(80)
+        tree.add_value(200)
+        tree.add_value(90)
+        tree.add_value(70)
+
+        value_node = tree.get_node(50)
+        self.assertIsNone(value_node)
 
     def test_get_max_node(self):
         tree = BST()
@@ -89,6 +115,17 @@ class TestBST(unittest.TestCase):
         tree.add_value(70)
 
         self.assertEqual(tree.height, 3)
+
+    def test_remove_node_failure(self):
+        tree = BST()
+        tree.add_value(100)
+        tree.add_value(80)
+        tree.add_value(200)
+        tree.add_value(90)
+        tree.add_value(70)
+
+        self.assertEqual(tree.remove_value(60), None)
+
 
 
 
