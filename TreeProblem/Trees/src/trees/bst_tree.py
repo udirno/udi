@@ -34,15 +34,15 @@ class BST(Generic[T, K]):
         Compute the height of the tree. If the tree is empty its height is -1
         :return:
         """
-        return self.height_helper(self.root)
+        return self.get_level(self.root) - 1
 
-    def height_helper(self, start: BSTNode[T]):
+    def get_level(self, start: BSTNode[T]):
         if start is None:
             return 0
         else:
-            left_height = self.height_helper(start.left)
-            right_height = self.height_helper(start.right)
-            return 1 + max(left_height, right_height)
+            left_level = self.get_level(start.left)
+            right_level = self.get_level(start.right)
+            return 1 + max(left_level, right_level)
 
 
     def __len__(self) -> int:
@@ -82,9 +82,9 @@ class BST(Generic[T, K]):
     def search(self, start: BSTNode[T], value: K):
         if start is None:  # empty node
             return None
-        elif value == start.value:  # match
+        elif value == self.key(start.value):  # match
             return start
-        elif value < start.value:  # search left
+        elif value < self.key(start.value):  # search left
             return self.search(start.left, value)
         else:  # search right
             return self.search(start.right, value)
