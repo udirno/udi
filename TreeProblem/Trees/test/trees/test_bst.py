@@ -1,15 +1,17 @@
 import unittest
-from Trees.src.trees.bst_tree import BST
+from Trees.src.trees.bst_tree import BST, MissingValueError
 from Trees.src.nodes.bst_node import BSTNode
+from typing import TypeVar
+K = TypeVar('K')
 
-def fill_int_tree(tree : BST[int, int]) -> None:
+def fill_int_tree(tree : BST[int, K]) -> None:
     tree.add_value(100)
     tree.add_value(80)
     tree.add_value(200)
     tree.add_value(90)
     tree.add_value(70)
 
-def fill_str_tree(tree : BST[str, str.lower]) -> None:
+def fill_str_tree(tree : BST[str, K]) -> None:
     tree.add_value('Apple')
     tree.add_value('Orange')
     tree.add_value('Pear')
