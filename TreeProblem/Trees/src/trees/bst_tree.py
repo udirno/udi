@@ -1,13 +1,9 @@
 from typing import Optional, Callable, TypeVar, Generic
-
 from Trees.src.errors import MissingValueError, EmptyTreeError
 from Trees.src.nodes.bst_node import BSTNode
 
 T = TypeVar('T')
 K = TypeVar('K')
-
-class MissingValueError(Exception):
-    ...
 
 class BST(Generic[T, K]):
     """
@@ -62,7 +58,17 @@ class BST(Generic[T, K]):
     def lower_bound(self, search_key: K):
         ''' find the first node that produces the largest key that is no more than the search key
         '''
-        return None
+        return self.lower_bound_helper(search_key, self.root, None)
+
+    def lower_bound_helper(self, search_key: K, start: BSTNode[T], lb: BSTNode[T]):
+        if start is None:
+            return lb
+        elif self.key(start.value) <= search_key:
+            if not lb or self.key(lb.value) < self.key(start.value):
+                lb = start
+            return self.lower_bound_helper(search_key, start.right, lb)
+        else:
+            return self.lower_bound_helper(search_key, start.left, lb)
 
     def upper_bound(self, search_key: K):
         ''' find the first node that produces the smallest key that is greater than or equal to search key
@@ -78,13 +84,6 @@ class BST(Generic[T, K]):
             return self.upper_bound_helper(search_key, start.left, ub)
         else:
             return self.upper_bound_helper(search_key, start.right, ub)
-
-
-
-
-
-
-
 
     def left_most(self, node):
         while node and node.left:

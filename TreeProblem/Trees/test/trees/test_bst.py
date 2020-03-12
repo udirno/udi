@@ -1,5 +1,6 @@
 import unittest
-from Trees.src.trees.bst_tree import BST, MissingValueError
+from Trees.src.trees.bst_tree import BST
+from Trees.src.errors import MissingValueError, EmptyTreeError
 from Trees.src.nodes.bst_node import BSTNode
 from typing import TypeVar
 K = TypeVar('K')

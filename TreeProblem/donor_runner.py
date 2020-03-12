@@ -1,8 +1,9 @@
 # Your solution for the donor problem here
 import sys
-from Trees.src.trees.bst_tree import BST, MissingValueError
+from Trees.src.trees.bst_tree import BST
 from Trees.src.nodes.bst_node import BSTNode
 from Trees.src.donor_prog.donor import Donor
+from Trees.src.errors import MissingValueError, EmptyTreeError
 
 if __name__ == '__main__':
     donor_file_path = sys.argv[1]
@@ -32,11 +33,15 @@ if __name__ == '__main__':
             # who +amount: Prints the first donor that donated at least amount if any
             amount = int(amount_arg[1:])
             donor_node = donor_tree.upper_bound(amount)
+            if not donor_node:
+                print('No Match')
 
         elif amount_arg[0] == '-':
             # who -amount: Prints the first donor that donated no more than amount if any
             amount = int(amount_arg[1:])
             donor_node = donor_tree.lower_bound(amount)
+            if not donor_node:
+                print('No Match')
         else:
             # who amount: Prints the first donor that who donated amount if any
             amount = int(amount_arg)
