@@ -95,28 +95,28 @@ class BST(Generic[T, K]):
             node = node.right
         return node
 
-    def get_node(self, value: K) -> BSTNode[T]:
+    def get_node(self, search_key: K) -> BSTNode[T]:
         """
-        Get the node with the specified value
-        :param value:
+        Get the node with the specified search_key
+        :param search_key:
         :raises MissingValueError if there is no node with the specified value
         :return:
         """
-        value_node = self.search(self.root, value)
+        value_node = self.search(search_key, self.root)
         if not value_node:
             raise MissingValueError
         else:
             return value_node
 
-    def search(self, start: BSTNode[T], value: K):
+    def search(self, search_key: K, start: BSTNode[T]):
         if start is None:  # empty node
             return None
-        elif value == self.key(start.value):  # match
+        elif search_key == self.key(start.value):  # match
             return start
-        elif value < self.key(start.value):  # search left
-            return self.search(start.left, value)
+        elif search_key < self.key(start.value):  # search left
+            return self.search(search_key, start.left)
         else:  # search right
-            return self.search(start.right, value)
+            return self.search(search_key, start.right)
 
 
     def get_max_node(self) -> BSTNode[T]:
