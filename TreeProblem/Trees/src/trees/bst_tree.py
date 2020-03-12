@@ -156,9 +156,13 @@ class BST(Generic[T, K]):
         return start
 
     def successor(self, node : BSTNode[T]):
+        ''' find the first node which produces the smallest key that is larger than key(node.value)
+        '''
         if node.right:
+            # find the smallest descendent larger than node
             return self.left_most(node.right)
         else:
+            # find the smallest ancestor larger than node
             parent = node.parent
             while parent and node == parent.right:
                 node = parent
