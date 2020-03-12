@@ -32,7 +32,7 @@ if __name__ == '__main__':
             # who +amount: Prints the first donor that donated at least amount if any
             amount = int(amount_arg[1:])
             donor_node = donor_tree.upper_bound(amount)
-            
+
         elif amount_arg[0] == '-':
             # who -amount: Prints the first donor that donated no more than amount if any
             amount = int(amount_arg[1:])

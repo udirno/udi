@@ -60,9 +60,31 @@ class BST(Generic[T, K]):
             return left_len + 1 + right_len
 
     def lower_bound(self, search_key: K):
+        ''' find the first node that produces the largest key that is no more than the search key
+        '''
         return None
+
     def upper_bound(self, search_key: K):
-        return None
+        ''' find the first node that produces the smallest key that is greater than or equal to search key
+        '''
+        return self.upper_bound_helper(search_key, self.root, None)
+
+    def upper_bound_helper(self, search_key: K, start: BSTNode[T], ub: BSTNode[T]):
+        if start is None:
+            return ub
+        elif self.key(start.value) >= search_key:
+            if not ub or self.key(ub.value) > self.key(start.value):
+                ub = start
+            return self.upper_bound_helper(search_key, start.left, ub)
+        else:
+            return self.upper_bound_helper(search_key, start.right, ub)
+
+
+
+
+
+
+
 
     def left_most(self, node):
         while node and node.left:
