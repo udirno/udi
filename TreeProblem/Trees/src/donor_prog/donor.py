@@ -7,6 +7,6 @@ class Donor(object):
         self.amount = amount
 
     def __str__(self) -> str:
-        print(f'{self.name}  with a donation of {self.amount}')
+        return f'{self.name}  with a donation of {self.amount}'
 
 

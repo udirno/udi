@@ -59,6 +59,11 @@ class BST(Generic[T, K]):
             right_len = self.len_helper(start.right)
             return left_len + 1 + right_len
 
+    def lower_bound(self, search_key: K):
+        return None
+    def upper_bound(self, search_key: K):
+        return None
+
     def left_most(self, node):
         while node and node.left:
             node = node.left
