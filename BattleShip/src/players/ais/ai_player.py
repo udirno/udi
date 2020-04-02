@@ -25,7 +25,7 @@ class AiPlayer(Player):
         already_used_names = set([player.name for player in other_players])
         while True:
             name = f'{prefix} {self.player_num}'
-            if name not in already_used_names:
+            if name not in already_used_names
                 return name
             else:
                 prefix += 'X'

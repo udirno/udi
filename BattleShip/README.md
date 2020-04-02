@@ -2,6 +2,43 @@
 
 We are implementing the game of Battleship. If you've never played Battleship you can play it online at [battleship.org](https://www.battleshiponline.org/). 
 
+The Battleship game is played between two players on a board where each player places their ships. Information about the size of the board (number or rows and columns), and the ships (names and sizes) are specified in configuration file. For example:
+
+```
+20 13
+Anaconda 8
+RaceCar 3
+SkyScraper 12
+Banana 6
+```
+
+The Battleship game starts by reading the configuration file and a random seed. The random seed is used for non-human players which is described below.
+
+The players can be either human or non-human (AI). There are three diffrent types of AI players to choose from: Cheating AI, Random AI, and the Search-and-Destroy AI. Each type of AI player use a different strategy to try and beat the opponent which can either be either a human another AI player. 
+
+
+Cheating AI plays a perfect game without missing a shot. Random AI fires at random locations and is unpredictable. Search and Destroy AI fires randomly until the first hit, after which it switches to destroy mode and uses strategy to try and destroy the rest of the ship.
+
+We implement random firing using a random number generator. The random number generator makes it almost impossible to guess or predict the the moves performed by the AI players. However, even though random moves are not **predictable** we want the games to be **repeatable**, i.e. replay of the same game should produce the same sequence of random moves. The games are made repeatable by making the random number generator during replay use the same seed (an integer) as the original game. This explains why a seed is provided while staring the game.
+
+We want the replay to be repeatable to facilitate software testing. We can capture the board positions of a reference game, and validate any other implementation of the game by running them with the same seed and comparing the board positons with the reference game.
+
+However, if any of the non-human players use identical strategies in two different rounds, we want those rounds to produce identical board positions. This helps with Software Testing; we can capture the board positions of a few reference rounds, and validate any other implementation of the game 
+ 
+All players start with the same boards and ships and take turns playing the game, and recording their score. Each player can be of any type: human or one of the  3 AI types. In the beginning, each player places all his or her ships on the board. Every human player places ships the way he or she wants. For each ship the human player specifies the orientation (horizonatal or vertical) and the position of the head of the ship (row and column). The AI players programmatically places all the ships using the same fixed set of rules. 
+
+
+Once all the ships are placed the game begins. The players will alternate giving their firing locations. Depending on whether they hit, miss, or destroy a ship a message will be displayed. The game will end when one player destroys all the other player's ships and is declared winner. 
+
+
+
+## Formal Requirements
+
+### Configuration file 
+
+Ship names will begin with X, O, or * [the hit, miss, and blank characters]
+
+
 The board size and the ships used in the game are specified in a configuration file using the following format
 
 ```
@@ -11,35 +48,12 @@ second_ship_name second_ship_length
 third_ship_name thrid_ship_name
 ...
 ```
-A round of the Battleship game starts by reading the configuration file and a random seed which provides repeatable behvior to the random number generator. The random number generator makes it almost impossible to guess or predict the the moves performed by the non-human players. The three non-human players to choose from are the Cheating Ai, the Random Ai, and the Search and Destroy Ai. Each of these Ai uses a different strategy to try and beat the opponent which can either be the user or another non-human player. 
-The Cheating Ai will play a perfect game without missing a shot. The Random Ai fires at random locations and is unpredictable. Search and Destroy Ai fires randomly until the first hit after which it uses strategy to destroy the rest of the ship.
-However, if any of the non-human players use identical strategies in two different rounds, we want those rounds to produce identical board positions. This helps with Software Testing; we can capture the board positions of a few reference rounds, and validate any other implementation of the game *by comparing this to what we want the non-human players employ the same strategy in two rounds of the game unpredictable by other players. However, , and we want them to behave the same way in all  the players are not necessarily human,  
-Refactored code has preserves the original functionality???* 
-All players start with the same boards and ships and take turns playing the game, and recording their score. A HumanPlayer can choose to play against another HumanPlayer, or one of the three AiPlayers. Note that HumanPlayer places ships differently from the AI players but all AI players place ships the same way, but differently from the human player. The HumanPlayer will then be asked if they want to place their first ship horizontally or vertically (any prefix of horizontal or vertical is accepted). Next, they will be asked for the position where they wish to place their ship. If the position entered is invalid i.e. off the board or in the incorrect format they will be asked again.
-Once all the ships are placed the game begins. The players will alternate giving their firing locations. Depending on whether they hit, miss, or destroy a ship a message will be displayed. The game will end when one player destroys all the other player's ships. 
-
-Design a game of Battleship - [battleship.org](https://www.battleshiponline.org/).
 
 ## High Level Design
 Since players play the game by placing ships on the board, we will start with 4 main classes: ```Game```, ```Player```, ```Board```, ```Ship```. We will put each class must be in its own file, and use type hints on function parameters and return types.   
 
 
-### Configuration file 
 
-Contains information about the board and ships:
-
-
-Ship names will begin with X, O, or * [the hit, miss, and blank characters]
-
-Example configuration file:
-
-```
-20 13
-Anaconda 8
-RaceCar 3
-SkyScraper 12
-Banana 6
-```
 **Note:** The length of the ship cannot be larger than one of the board's dimensions
 
 ### Players
@@ -59,28 +73,30 @@ If the user enters invalid input anywhere along the way they should be told what
 
 The Battleship game can be divided into two players: Human Players and non-human players. In the player directory there are two similar classes:  ```player.py``` and ```human_player.py```. 
 
-**player.py** - Has abstract methods to gather information from the user: 
+**player.py** - The Player class has abstract methods to gather information from the user: 
 ```get_name_from_player(self, other_players: Iterable["Player"])``` gets the player's name; ```get_ship_start_coords(self, ship_: Ship, orientation_: Orientation)``` checks if the coordniate the user enters for where to place the respective is valid i.e. does it fit on the board; Assuming the prefixes for the input are valid ```get_ship_orientation(self, ship_: Ship)``` returns if the ship is to be oriented horizontally or vertically; ```get_move(self, opponent : "Player")``` returns the coordinate for the user's first firing location.
 
 These methods are abstract because this information is gathered from the user so they are defined in the ```human_player.py``` class. The functions that are defined in this class are only the ones that are unique for the non-human human players. The ```get_ship_placement(self, ship_ : Ship)``` gets start cell and orientation for the ship that fits on the board. The ```change_strategy(self, move: Move, score_msg: str)``` function is defined later but passed here. Finally, the ```take_turn(self, opponent: "Player")``` function is used to alternate turns between players and this method also calls the ```change_strategy``` function.
 
-**human_player.py** - This class takes the ```Player``` object as an argument and includes the definitions for all but the three non-human player methods in ```player.py```
+**human_player.py** - This HumanPlayer class takes the ```Player``` object as an argument and includes the definitions for all but the three non-human player methods in ```player.py```
+
+**ai_player.py** - The AiPlayer class is the base class for the three types of AI players (Random AI, Search and Destroy AI and Cheating AI) so it only has functions that gather information that all three AI's need. These include ```get_random_name(self, other_players: Iterable["Player"])``` which either takes the name the user gives it for the opponent or picks one randomly from a default set. ```get_name_with_prefix``` is used to name the AI player for example as "Random Ai 1".  The ```get_ship_orientation(self, ship_: Ship)``` function picks the orientation of the ship randomly from the list containg the two options: horizontal or vertical. ```get_ship_start_coords(self, ship_: Ship, orientation_: Orientation)``` calculates the start coordinate for the ship based on its orientation. **The start coordinate is always from the top of the ship.**
+
+**random_ai.py** - The RandomAI class takes an AiPlayer object as an argument.```get_name_from_player(self, other_players: Iterable["Player"])``` calls its parent function ```get_name_with_prefix``` to pick a random name from the list. ```firing_locations``` is a list of tuples containing all the coordinates on the board. The ```get_move``` function randomly chooses a coordinate from ```firing_locations``` and then removes it from the list to avoid repetition. 
+
+**cheating_ai.py** - The CheatingAi class takes an AiPlayer object as an argument. It has a ```get_name_from_player(self, other_players: Iterable["Player"])``` method which creates the name for the Cheating Ai. There is also a ```get_move(self, opponent: "Player")``` function which calls the ```get_ship_coordinate``` method to gather the ship locations of the opponent. For the Cheating AI, the ```firing_locations``` become the same as the ```get_ship_coordinate``` locations so that every shot is a guranteed hit. After each turn the firing location is removed from ```firing_locations```. This allows Cheating AI to play a perfect game.
+
+**search_destroy_ai.py** - The SearchDestroy class takes an AiPlayer as an argument. It has a ```get_name_from_player(self, other_players: Iterable["Player"])``` method which creates the name for the Search and Destroy Ai. The ```get_move``` function in this class initially chooses a random firing location. After firint that location is then removed from ```firing_locations```. After the first hit however, the ```self.mode``` changes to "destroy mode". The ```change_strategy(self, move : Move, score_msg : str)``` method is used to switch from **search** to **destroy** mode. There is a ```destroy_locations```double ended queue ```(deque)``` which stores the potential destroy locations by checking the left, right, top, and bottom coordinates of the hit location and adds them to the deque. Note that before adding a coordinate to ```destroy_locations``` the coordinate must also be in ```firing_locations``` so that no coordinate is used multiple times. The next firing location is chosen by using ```popLeft``` on the ```deque``` and continues this process till the whole ship has been destroyed.
 
 ### Ships
 
-The two ship classes are ```ship.py``` and ```ship_placement.py```
+The two ship classes are ```Ship``` and ```ShipPlacement```
 
-**ship.py** - Creates a ```Ship``` object with attributes ```ship_name``` and ```ship_len```
+**ship.py** - Creates a ```Ship``` object with attributes ```ship_name``` and ```ship_len```.
 
 **ship_placement.py** - Has the function ```get_ship_end_coords``` which returns the coordinate where the ship ends. This is needed for determining when a ship is completely destroyed.
 
-	
-	
-
-	
-
-
-### The Gameplay Loop
+### Game
 
 On each players turn
 
@@ -114,6 +130,12 @@ col: Column should be an integer. {col} is NOT an integer.
 ```
  You have already fired at {row}, {col}
 ```
+
+**orientation.py** - The 
+
+**game.py** - The Game class stores all the information about the game itself. The constructor ... ```pick_player_type``` function gives the user the four player options (Human, or one of the three AI's) to choose from.
+
+
 
 ### Overview
 
