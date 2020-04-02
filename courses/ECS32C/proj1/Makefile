@@ -28,8 +28,8 @@ endif
 
 ifeq ($(UNAME), Darwin)
 # add paths if developing on mac with macports
-INCLUDE     += -I '/opt/local/include'
-TESTLDFLAGS += -L '/opt/local/lib'
+INCLUDE     += -I /opt/local/include -I $(HOME)/googletest-release-1.10.0/googletest/include
+TESTLDFLAGS += -L /opt/local/lib -L $(HOME)/googletest-release-1.10.0/bld/lib
 endif
 
 INCLUDE         += -I $(INC_DIR)
