@@ -76,7 +76,11 @@ This class has 4 functions implemented to help us perform the task of sorting th
 
 **RecordCount()** returns the total number of records inserted. So from the previous example RecordCount() would return 3. 
 
-**QueryRecord** is a function that takes in 2 parameters - index and element. 
+**QueryRecord** is a function that returns the value of a field from a number of records where each record contains a number of fields. It takes 2 parameters: `index` denotes the index of a record, and `element` denotes the index of the field within the record:
+
+```
+int QueryRecord(int index, int element);
+``` 
 
 Ex:
 If you called QueryRecord with index of 2, and element of 3 (height):
@@ -91,13 +95,17 @@ If the first element in the order array is negative, i.e order[0] has a negative
 
 **SortByIndices** has 4 parameters: The **indices array**, **indices length**, **order** and **orderlength**.
 
-**indices[]** will only store the indices of the records. So from our previous example if we were to call SortByIndices, our indices array would simply be {0,1,2}. It does not contain the values of the elements of the records. 
+```
+void SortByIndices(int indices[], size_t idxlen, int order[], size_t orderlen);
+```
 
-**indxlen** specifies the length of the indices array.
+**indices[]** stores the indices of the records. So from our previous example if we were to call SortByIndices, our indices array would simply be {0,1,2}. It does not contain the values of the elements of the records. 
 
-**order[]** 
+**indxlen** specifies the length of the indices array, i.e. how many indices there are.
 
-**orderlen** specifies the length of the indices array.
+**order[]** is an array of integers which specifies the order in which the fields withing the record are compared. For example if the order given is "id" and the order array is ```{1, 3, 4, 2}``` then the Record is sorted by first comparing fields 1 (ID). If the IDs of the two records are the same, then they are compared by field 3 (Height), 4 (Weight), and 2 (DoB) respectively as we encounter additional ties. Then by field 3 (),  by ID (1). However, if there are two of the same ID's, the Record will then look at Height (3) as the next way to sort the Record. A negative number in the order[] means that that order should be sorted in descending order. 
+
+**orderlen** specifies the length of the order array.
 
 To get the values of the elements of the records you would have to use QueryRecord. Since the 1st parameter of the QueryRecord asks you for the index of the record, you can use the indices array, along with the order array to get the value of the element you're looking for.
 

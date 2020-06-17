@@ -1,0 +1,3 @@
++ 0 65 "zyxwvutsrqponmlkjihgfedcba\nZYXWVUTSRQPONMLKJIHGFEDCBA\n9876543210\n"
++ 130 65 "9876543210\nUDIRNOGHIJKLMNOPQRSTUVWXYZ\nabcdefghijklmnopqrstuvwxyz\n"
+
