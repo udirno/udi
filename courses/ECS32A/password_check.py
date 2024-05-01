@@ -1,4 +1,4 @@
-#Data Manipulation
+#Data Manipulation Section
 #Part 2: Password Validator
 #Udirno Chaudhuri
 #Checks if user's password is strong or weak
